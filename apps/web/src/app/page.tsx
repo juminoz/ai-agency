@@ -371,21 +371,17 @@ export default function Home() {
             </FadeIn>
           </div>
 
-          {/* Right — mascot */}
+          {/* Right — hero visual */}
           <FadeIn delay={0.3} direction="right" className="relative flex items-end justify-center">
-            <motion.div
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Image
-                src="/mascot.png"
-                alt="BrandBuddy otter mascot"
-                width={440}
-                height={440}
-                className="relative z-10 h-auto w-[300px] drop-shadow-2xl md:w-[400px] lg:w-[440px]"
-                priority
-              />
-            </motion.div>
+            <Image
+              src="/brandbuddy.gif"
+              alt="BrandBuddy platform demo"
+              width={560}
+              height={400}
+              className="relative z-10 h-auto w-[340px] rounded-2xl shadow-2xl md:w-[480px] lg:w-[560px]"
+              priority
+              unoptimized
+            />
           </FadeIn>
         </div>
 
