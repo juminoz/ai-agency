@@ -107,7 +107,14 @@ Rules:
       throw new Error("No JSON found in Gemini response");
     }
 
-    const parsed = JSON.parse(jsonMatch[0]) as CommentAnalysisResult;
+    // Clean common JSON issues from LLM output
+    const cleaned = jsonMatch[0]
+      .replace(/,\s*([}\]])/g, "$1") // trailing commas
+      .replace(/'/g, '"') // single quotes → double quotes
+      .replace(/\/\/[^\n]*/g, "") // single-line comments
+      .replace(/\/\*[\s\S]*?\*\//g, ""); // block comments
+
+    const parsed = JSON.parse(cleaned) as CommentAnalysisResult;
 
     return {
       demographicSignals: parsed.demographicSignals ?? [],
