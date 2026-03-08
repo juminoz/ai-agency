@@ -7,6 +7,10 @@ app = 'ai-agency'
 primary_region = 'nrt'
 
 [build]
+  [build.args]
+    NEXT_PUBLIC_SUPABASE_URL = "https://olmwsmrewylwsxhhubvm.supabase.co"
+    NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9sbXdzbXJld3lsd3N4aGh1YnZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5NDI1NTAsImV4cCI6MjA4ODUxODU1MH0.6qvtk9NvVgmj7Kjj-ou0CXqdEPg31U3N5iF60QrQO54"
+    NEXT_PUBLIC_APP_URL = "https://ai-agency.fly.dev"
 
 [env]
   NODE_ENV = 'production'
