@@ -11,6 +11,7 @@ interface Creator {
   avatar: string;
   bio: string;
   platform: string;
+  isOnPlatform?: boolean;
   subscriberCount: number;
   videoCount: number;
   categories: string[];
@@ -30,7 +31,11 @@ interface Creator {
     commentAudienceMatch: number;
   };
   nicheRanking: { percentile: number; category: string; tier: string };
-  performanceTrend: { viewsTrend: string; engagementTrend: string; narrative: string };
+  performanceTrend: {
+    viewsTrend: string;
+    engagementTrend: string;
+    narrative: string;
+  };
   audienceInterests: { category: string; confidence: number }[];
   authenticity: {
     score: number;
@@ -79,6 +84,7 @@ export function CreatorSearch({ creators }: CreatorSearchProps) {
   const [query, setQuery] = useState("");
   const [platform, setPlatform] = useState("all");
   const [budgetIdx, setBudgetIdx] = useState(0);
+  const [statusFilter, setStatusFilter] = useState("all");
   const [searchMode, setSearchMode] = useState<"search" | "campaign">("search");
 
   const filtered = useMemo(() => {
@@ -86,6 +92,10 @@ export function CreatorSearch({ creators }: CreatorSearchProps) {
     const budget = BUDGET_RANGES[budgetIdx]!;
 
     return creators.filter((c) => {
+      // Platform status filter
+      if (statusFilter === "on_platform" && !c.isOnPlatform) return false;
+      if (statusFilter === "channel_only" && c.isOnPlatform) return false;
+
       // Platform filter
       if (platform !== "all" && c.platform !== platform) return false;
 
@@ -112,7 +122,7 @@ export function CreatorSearch({ creators }: CreatorSearchProps) {
 
       return true;
     });
-  }, [creators, query, platform, budgetIdx]);
+  }, [creators, query, platform, budgetIdx, statusFilter]);
 
   return (
     <div>
@@ -203,6 +213,17 @@ export function CreatorSearch({ creators }: CreatorSearchProps) {
                   {r.label}
                 </option>
               ))}
+            </select>
+
+            {/* Status filter */}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="rounded-full border border-surface-200 bg-white px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-brand-primary"
+            >
+              <option value="all">All Creators</option>
+              <option value="on_platform">On Platform</option>
+              <option value="channel_only">Channel Only</option>
             </select>
 
             {/* Search button */}

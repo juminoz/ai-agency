@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 interface Creator {
@@ -9,6 +10,7 @@ interface Creator {
   avatar: string;
   bio: string;
   platform: string;
+  isOnPlatform?: boolean;
   subscriberCount: number;
   categories: string[];
   nicheTags: string[];
@@ -70,23 +72,40 @@ function StarRating({ rating }: { rating: number }) {
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: full }).map((_, i) => (
-        <svg key={`f-${i}`} className="h-4 w-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+        <svg
+          key={`f-${i}`}
+          className="h-4 w-4 text-amber-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
       ))}
       {half && (
-        <svg className="h-4 w-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+        <svg
+          className="h-4 w-4 text-amber-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
           <defs>
             <linearGradient id="halfGrad">
               <stop offset="50%" stopColor="currentColor" />
               <stop offset="50%" stopColor="#D1D5DB" />
             </linearGradient>
           </defs>
-          <path fill="url(#halfGrad)" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          <path
+            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+            fill="url(#halfGrad)"
+          />
         </svg>
       )}
       {Array.from({ length: empty }).map((_, i) => (
-        <svg key={`e-${i}`} className="h-4 w-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+        <svg
+          key={`e-${i}`}
+          className="h-4 w-4 text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
       ))}
@@ -110,10 +129,23 @@ export function CreatorCard({ creator }: CreatorCardProps) {
           {creator.platform}
         </span>
 
+        {/* On-platform status */}
+        {creator.isOnPlatform !== undefined && (
+          <span
+            className={`absolute left-3 top-10 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+              creator.isOnPlatform
+                ? "bg-emerald-500/90 text-white"
+                : "bg-gray-800/70 text-gray-200"
+            }`}
+          >
+            {creator.isOnPlatform ? "On Platform" : "Channel Only"}
+          </span>
+        )}
+
         {/* Save / heart button */}
         <button
-          onClick={() => setSaved(!saved)}
           className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 transition-colors hover:bg-white"
+          onClick={() => setSaved(!saved)}
         >
           <svg
             className={`h-4 w-4 ${saved ? "fill-rose-500 text-rose-500" : "fill-none text-gray-500"}`}
@@ -122,9 +154,9 @@ export function CreatorCard({ creator }: CreatorCardProps) {
             viewBox="0 0 24 24"
           >
             <path
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
             />
           </svg>
         </button>
@@ -165,9 +197,24 @@ export function CreatorCard({ creator }: CreatorCardProps) {
 
         {/* Avg Views */}
         <div className="mt-2 flex items-center gap-1.5 text-sm text-gray-600">
-          <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          <svg
+            className="h-4 w-4 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+            />
+            <path
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+            />
           </svg>
           <span>Avg Views: {avgViews(creator.recentVideos)}</span>
         </div>
@@ -190,9 +237,12 @@ export function CreatorCard({ creator }: CreatorCardProps) {
         </div>
 
         {/* View Profile button */}
-        <button className="mt-4 w-full rounded-button bg-brand-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-500">
+        <Link
+          className="mt-4 block w-full rounded-button bg-brand-primary px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-brand-500"
+          href={`/brand/creators/${creator.id}`}
+        >
           View Profile
-        </button>
+        </Link>
       </div>
     </div>
   );

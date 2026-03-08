@@ -20,7 +20,9 @@ export default function BrandLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const pageTitle = PAGE_TITLES[pathname] ?? "Dashboard";
+  const pageTitle =
+    PAGE_TITLES[pathname] ??
+    (pathname.startsWith("/brand/creators/") ? "Creator Profile" : "Dashboard");
 
   return (
     <DashboardShell role="brand" pageTitle={pageTitle}>

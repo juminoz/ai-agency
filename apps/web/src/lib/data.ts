@@ -35,7 +35,9 @@ import mockNotificationsJson from "@/data/mock/notifications.json";
 
 // ── Transform mock JSON → DB row shapes ───────────────────────────────────
 
-function mockCreatorToRow(c: (typeof mockCreatorsJson)[number]): CreatorProfile {
+function mockCreatorToRow(
+  c: (typeof mockCreatorsJson)[number]
+): CreatorProfile {
   return {
     id: c.id,
     user_id: null,
@@ -84,7 +86,9 @@ function mockCreatorToRow(c: (typeof mockCreatorsJson)[number]): CreatorProfile 
   };
 }
 
-function mockCreatorVideos(c: (typeof mockCreatorsJson)[number]): CreatorVideo[] {
+function mockCreatorVideos(
+  c: (typeof mockCreatorsJson)[number]
+): CreatorVideo[] {
   return c.recentVideos.map((v) => ({
     id: v.id,
     creator_id: c.id,
@@ -120,7 +124,10 @@ function mockBrandToRow(b: MockBrand): Brand {
   };
 }
 
-function mockBriefToRow(brief: MockBrand["activeBriefs"][number], brandId: string): Brief {
+function mockBriefToRow(
+  brief: MockBrand["activeBriefs"][number],
+  brandId: string
+): Brief {
   return {
     id: brief.id,
     brand_id: brandId,
@@ -157,14 +164,60 @@ function mockDealToRow(d: MockDeal): Deal {
     brief_exclusivity_category: d.brief.exclusivity?.category ?? null,
     brief_exclusivity_window: d.brief.exclusivity?.window ?? null,
     match_score: d.matchScore,
-    agreed_rate: ("agreedRate" in d ? (d as Record<string, unknown>).agreedRate as number : null) ?? null,
-    campaign_url: ("campaignUrl" in d ? (d as Record<string, unknown>).campaignUrl as string : null) ?? null,
-    projected_views: ("performance" in d ? (d as Record<string, unknown> & { performance?: { projectedViews?: number } }).performance?.projectedViews : null) ?? null,
-    actual_views: ("performance" in d ? (d as Record<string, unknown> & { performance?: { actualViews?: number } }).performance?.actualViews : null) ?? null,
-    projected_engagements: ("performance" in d ? (d as Record<string, unknown> & { performance?: { projectedEngagements?: number } }).performance?.projectedEngagements : null) ?? null,
-    actual_engagements: ("performance" in d ? (d as Record<string, unknown> & { performance?: { actualEngagements?: number } }).performance?.actualEngagements : null) ?? null,
-    days_live: ("performance" in d ? (d as Record<string, unknown> & { performance?: { daysLive?: number } }).performance?.daysLive : null) ?? null,
-    performance_status: ("performance" in d ? (d as Record<string, unknown> & { performance?: { status?: string } }).performance?.status as Deal["performance_status"] : null) ?? null,
+    agreed_rate:
+      ("agreedRate" in d
+        ? ((d as Record<string, unknown>).agreedRate as number)
+        : null) ?? null,
+    campaign_url:
+      ("campaignUrl" in d
+        ? ((d as Record<string, unknown>).campaignUrl as string)
+        : null) ?? null,
+    projected_views:
+      ("performance" in d
+        ? (
+            d as Record<string, unknown> & {
+              performance?: { projectedViews?: number };
+            }
+          ).performance?.projectedViews
+        : null) ?? null,
+    actual_views:
+      ("performance" in d
+        ? (
+            d as Record<string, unknown> & {
+              performance?: { actualViews?: number };
+            }
+          ).performance?.actualViews
+        : null) ?? null,
+    projected_engagements:
+      ("performance" in d
+        ? (
+            d as Record<string, unknown> & {
+              performance?: { projectedEngagements?: number };
+            }
+          ).performance?.projectedEngagements
+        : null) ?? null,
+    actual_engagements:
+      ("performance" in d
+        ? (
+            d as Record<string, unknown> & {
+              performance?: { actualEngagements?: number };
+            }
+          ).performance?.actualEngagements
+        : null) ?? null,
+    days_live:
+      ("performance" in d
+        ? (
+            d as Record<string, unknown> & {
+              performance?: { daysLive?: number };
+            }
+          ).performance?.daysLive
+        : null) ?? null,
+    performance_status:
+      ("performance" in d
+        ? ((
+            d as Record<string, unknown> & { performance?: { status?: string } }
+          ).performance?.status as Deal["performance_status"])
+        : null) ?? null,
     created_at: d.createdAt,
     updated_at: d.createdAt,
   };
@@ -181,7 +234,9 @@ function mockDealMessages(d: MockDeal): DealMessage[] {
   }));
 }
 
-function mockNotificationToRow(n: (typeof mockNotificationsJson)[number]): Notification {
+function mockNotificationToRow(
+  n: (typeof mockNotificationsJson)[number]
+): Notification {
   return {
     id: n.id,
     type: n.type as Notification["type"],
@@ -192,6 +247,142 @@ function mockNotificationToRow(n: (typeof mockNotificationsJson)[number]): Notif
     related_id: n.relatedId,
     read: n.read,
     created_at: n.timestamp,
+  };
+}
+
+// ── CreatorProfile → camelCase view shape (used by brand-side components) ──
+
+export interface CreatorView {
+  id: string;
+  handle: string;
+  name: string;
+  avatar: string;
+  bio: string;
+  platform: string;
+  isOnPlatform: boolean;
+  subscriberCount: number;
+  videoCount: number;
+  categories: string[];
+  nicheTags: string[];
+  availabilityStatus: string;
+  minimumDealSize: number;
+  brandPreferences: { open: string[]; blocked: string[] };
+  publicProfileUrl: string;
+  channelUrl: string;
+  score: {
+    overall: number;
+    topicRelevance: number;
+    recentViews: number;
+    engagementHealth: number;
+    authenticity: number;
+    activityConsistency: number;
+    commentAudienceMatch: number;
+  };
+  nicheRanking: { percentile: number; category: string; tier: string };
+  performanceTrend: {
+    viewsTrend: string;
+    engagementTrend: string;
+    narrative: string;
+  };
+  audienceInterests: { category: string; confidence: number }[];
+  authenticity: {
+    score: number;
+    fakeFollowerRisk: string;
+    viewSpikeDetected: boolean;
+    commentQuality: number;
+    likeToViewNormality: number;
+  };
+  recentVideos: {
+    id: string;
+    title: string;
+    publishedAt: string;
+    views: number;
+    likes: number;
+    comments: number;
+    engagementRate: number;
+  }[];
+  trackRecord: {
+    completedCampaigns: number;
+    deliveryRate: number;
+    avgPerformanceVsProjection: string;
+    avgRating: number;
+  };
+  dealHistory: {
+    brand: string;
+    rate: number;
+    format: string;
+    date: string;
+    outcome: string;
+  }[];
+}
+
+export function creatorProfileToView(
+  p: CreatorProfile,
+  videos: CreatorVideo[] = []
+): CreatorView {
+  return {
+    id: p.id,
+    handle: p.handle,
+    name: p.name,
+    avatar: p.avatar ?? "",
+    bio: p.bio ?? "",
+    platform: p.platform,
+    isOnPlatform: p.user_id !== null,
+    subscriberCount: p.subscriber_count,
+    videoCount: p.video_count,
+    categories: p.categories,
+    nicheTags: p.niche_tags,
+    availabilityStatus: p.availability_status,
+    minimumDealSize: p.minimum_deal_size,
+    brandPreferences: {
+      open: p.brand_preferences_open,
+      blocked: p.brand_preferences_blocked,
+    },
+    publicProfileUrl: p.public_profile_url ?? "",
+    channelUrl: p.channel_url ?? "",
+    score: {
+      overall: p.score_overall,
+      topicRelevance: p.score_topic_relevance,
+      recentViews: p.score_recent_views,
+      engagementHealth: p.score_engagement_health,
+      authenticity: p.score_authenticity,
+      activityConsistency: p.score_activity_consistency,
+      commentAudienceMatch: p.score_comment_audience_match,
+    },
+    nicheRanking: {
+      percentile: p.niche_percentile,
+      category: p.niche_category ?? "",
+      tier: p.niche_tier ?? "",
+    },
+    performanceTrend: {
+      viewsTrend: p.views_trend ?? "",
+      engagementTrend: p.engagement_trend ?? "",
+      narrative: p.trend_narrative ?? "",
+    },
+    audienceInterests: p.audience_interests,
+    authenticity: {
+      score: p.authenticity_score,
+      fakeFollowerRisk: p.fake_follower_risk,
+      viewSpikeDetected: p.view_spike_detected,
+      commentQuality: p.comment_quality,
+      likeToViewNormality: p.like_to_view_normality,
+    },
+    recentVideos: videos.map((v) => ({
+      id: v.video_id ?? v.id,
+      title: v.title,
+      publishedAt: v.published_at ?? "",
+      views: v.views,
+      likes: v.likes,
+      comments: v.comments,
+      engagementRate: v.engagement_rate,
+    })),
+    trackRecord: {
+      completedCampaigns: p.completed_campaigns,
+      deliveryRate: p.delivery_rate,
+      avgPerformanceVsProjection: p.avg_performance_vs_projection ?? "",
+      avgRating: p.avg_rating,
+    },
+    dealHistory: p.deal_history,
   };
 }
 
@@ -209,7 +400,9 @@ export async function getCreators(): Promise<CreatorProfile[]> {
   return mockCreatorsJson.map(mockCreatorToRow);
 }
 
-export async function getCreatorById(id: string): Promise<CreatorProfile | null> {
+export async function getCreatorById(
+  id: string
+): Promise<CreatorProfile | null> {
   const sb = getSupabase();
   if (sb) {
     const { data, error } = await sb
@@ -223,7 +416,9 @@ export async function getCreatorById(id: string): Promise<CreatorProfile | null>
   return mock ? mockCreatorToRow(mock) : null;
 }
 
-export async function getCreatorVideos(creatorId: string): Promise<CreatorVideo[]> {
+export async function getCreatorVideos(
+  creatorId: string
+): Promise<CreatorVideo[]> {
   const sb = getSupabase();
   if (sb) {
     const { data, error } = await sb
@@ -265,7 +460,9 @@ export async function getBriefs(brandId?: string): Promise<Brief[]> {
   if (sb) {
     let query = sb.from("briefs").select("*");
     if (brandId) query = query.eq("brand_id", brandId);
-    const { data, error } = await query.order("created_at", { ascending: false });
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
     if (!error && data && data.length > 0) return data;
   }
   const filteredBrands = brandId
@@ -276,18 +473,25 @@ export async function getBriefs(brandId?: string): Promise<Brief[]> {
   );
 }
 
-export async function getDeals(opts?: { brandId?: string; creatorId?: string }): Promise<Deal[]> {
+export async function getDeals(opts?: {
+  brandId?: string;
+  creatorId?: string;
+}): Promise<Deal[]> {
   const sb = getSupabase();
   if (sb) {
     let query = sb.from("deals").select("*");
     if (opts?.brandId) query = query.eq("brand_id", opts.brandId);
     if (opts?.creatorId) query = query.eq("creator_id", opts.creatorId);
-    const { data, error } = await query.order("created_at", { ascending: false });
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
     if (!error && data && data.length > 0) return data;
   }
   let filtered = mockDealsJson as MockDeal[];
-  if (opts?.brandId) filtered = filtered.filter((d) => d.brandId === opts.brandId);
-  if (opts?.creatorId) filtered = filtered.filter((d) => d.creatorId === opts.creatorId);
+  if (opts?.brandId)
+    filtered = filtered.filter((d) => d.brandId === opts.brandId);
+  if (opts?.creatorId)
+    filtered = filtered.filter((d) => d.creatorId === opts.creatorId);
   return filtered.map(mockDealToRow);
 }
 
@@ -326,9 +530,12 @@ export async function getNotifications(opts?: {
   const sb = getSupabase();
   if (sb) {
     let query = sb.from("notifications").select("*");
-    if (opts?.recipientType) query = query.eq("recipient_type", opts.recipientType);
+    if (opts?.recipientType)
+      query = query.eq("recipient_type", opts.recipientType);
     if (opts?.recipientId) query = query.eq("recipient_id", opts.recipientId);
-    const { data, error } = await query.order("created_at", { ascending: false });
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
     if (!error && data && data.length > 0) return data;
   }
   let filtered = mockNotificationsJson;

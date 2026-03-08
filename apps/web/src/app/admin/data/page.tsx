@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BulkAnalyzer } from "@/components/bulk-analyzer";
 import { BulkScorer } from "@/components/bulk-scorer";
 import { ChannelCard } from "@/components/channel-card";
+import { ChannelSync } from "@/components/channel-sync";
 import { DataTabs } from "@/components/data-tabs";
 import { createServerClient } from "@/lib/supabase/server";
 import { type Channel, type ChannelScore } from "@/lib/supabase/types";
@@ -126,6 +127,8 @@ export default async function DataPage() {
           Analytics
         </Link>
       </div>
+
+      <ChannelSync />
 
       <BulkScorer />
 
