@@ -1,0 +1,92 @@
+# AI Agency - Development Rules
+
+## Project Structure
+This is a Turborepo monorepo with pnpm workspaces.
+
+```
+ai-agency/
+├── apps/
+│   └── web/                 # Next.js 15 app (App Router)
+├── packages/
+│   ├── ui/                  # Shared React component library (shadcn/ui)
+│   ├── typescript-config/   # Shared TypeScript configurations
+│   └── eslint-config/       # Shared ESLint configurations
+```
+
+## Tech Stack
+- **Framework**: Next.js 15 (App Router, Turbopack)
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS 3 + shadcn/ui components
+- **Package Manager**: pnpm 9 with workspaces
+- **Build System**: Turborepo
+- **Linting**: ESLint + Prettier
+
+## Code Conventions
+
+### General
+- Use TypeScript strict mode everywhere. No `any` types unless absolutely necessary.
+- Use `type` imports with `import { type Foo }` syntax.
+- Prefer named exports over default exports (except for Next.js pages/layouts).
+- Use absolute imports: `@/*` for app code, `@repo/*` for workspace packages.
+- Keep files focused and small. One component per file.
+
+### React / Next.js
+- Default to React Server Components. Add `"use client"` only when needed.
+- Use the Next.js App Router conventions: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`.
+- Colocate related files: keep components, hooks, and utilities near their usage.
+- Use `next/image` for images, `next/link` for navigation.
+- Handle loading and error states with Suspense boundaries and error boundaries.
+
+### Styling
+- Use Tailwind CSS utility classes. Avoid custom CSS unless necessary.
+- Use the `cn()` utility from `@repo/ui/lib/utils` for conditional classes.
+- Use CSS variables from the design system (defined in `globals.css`).
+- Follow mobile-first responsive design.
+- Use shadcn/ui components from `@repo/ui/components/*`.
+
+### State Management
+- Prefer React Server Components for data fetching.
+- Use React hooks (`useState`, `useReducer`) for local client state.
+- Use URL search params for shareable state.
+- Avoid global state libraries unless complexity demands it.
+
+### File Naming
+- Components: `PascalCase.tsx` or `kebab-case.tsx` (be consistent within a directory)
+- Utilities/hooks: `camelCase.ts`
+- Types: colocate with usage or in `types.ts` files
+- Constants: `UPPER_SNAKE_CASE` for true constants
+
+### Monorepo Rules
+- Shared components go in `packages/ui/src/components/`.
+- App-specific components stay in `apps/web/src/components/`.
+- Never import from `apps/*` in `packages/*`.
+- Use `workspace:*` protocol for internal dependencies.
+- Run commands from root: `pnpm dev`, `pnpm build`, `pnpm lint`.
+
+### Performance
+- Minimize `"use client"` boundaries. Push them as far down the tree as possible.
+- Use dynamic imports (`next/dynamic`) for heavy client components.
+- Implement proper caching with Next.js `fetch` options and `revalidate`.
+- Use `React.memo`, `useMemo`, `useCallback` only when profiling shows need.
+
+### Error Handling
+- Use TypeScript discriminated unions for result types.
+- Handle errors at boundaries, not inline.
+- Always provide user-friendly error messages.
+- Log errors with sufficient context for debugging.
+
+### Testing
+- Write tests for business logic and critical user flows.
+- Use descriptive test names: `it("should redirect unauthenticated users")`.
+- Colocate test files: `Component.test.tsx` next to `Component.tsx`.
+
+### Git
+- Write clear commit messages: `type(scope): description`
+- Types: `feat`, `fix`, `refactor`, `style`, `test`, `docs`, `chore`
+- Keep commits atomic and focused.
+
+### Security
+- Never commit secrets or API keys. Use `.env.local` files.
+- Validate all user inputs on the server side.
+- Use Next.js built-in CSRF protection.
+- Sanitize data before rendering.
