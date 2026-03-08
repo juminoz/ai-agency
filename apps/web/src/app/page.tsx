@@ -1,83 +1,227 @@
+"use client";
+
+import { motion, useInView } from "framer-motion";
+import {
+  ArrowRight,
+  BarChart3,
+  Eye,
+  Handshake,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Target,
+  Twitter,
+  Youtube,
+  Facebook,
+  Instagram,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from "react";
+
+/* ------------------------------------------------------------------ */
+/*  Animation helpers                                                  */
+/* ------------------------------------------------------------------ */
+
+function FadeIn({
+  children,
+  delay = 0,
+  direction = "up",
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  direction?: "up" | "down" | "left" | "right" | "none";
+  className?: string;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+
+  const directionOffset = {
+    up: { y: 40, x: 0 },
+    down: { y: -40, x: 0 },
+    left: { x: 40, y: 0 },
+    right: { x: -40, y: 0 },
+    none: { x: 0, y: 0 },
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, ...directionOffset[direction] }}
+      animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.4, 0.25, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function StaggerContainer({
+  children,
+  className = "",
+  stagger = 0.1,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  stagger?: number;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={{
+        hidden: {},
+        visible: { transition: { staggerChildren: stagger } },
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function StaggerItem({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.4, 0.25, 1] } },
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
+
+const FEATURES = [
+  {
+    icon: Target,
+    title: "Smart Creator Matching",
+    desc: "Our scoring engine analyzes 6 key signals to surface creators who genuinely align with your brand and audience.",
+    color: "text-brand-primary",
+    bg: "bg-brand-50",
+  },
+  {
+    icon: BarChart3,
+    title: "Data-Driven Decisions",
+    desc: "Go beyond follower counts. See engagement health, audience authenticity, content relevance, and growth trends.",
+    color: "text-accent-primary",
+    bg: "bg-accent-50",
+  },
+  {
+    icon: Handshake,
+    title: "Seamless Collaboration",
+    desc: "From first contact to campaign review — manage briefs, negotiate deals, and track performance in one place.",
+    color: "text-purple-500",
+    bg: "bg-purple-50",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Verified Creators",
+    desc: "Multi-signal authenticity scoring flags fake engagement so you invest only in genuine influence.",
+    color: "text-green-500",
+    bg: "bg-green-50",
+  },
+];
 
 const CREATOR_CARDS = [
   {
     name: "Ashley Peters",
     tags: "Travel · Japan · Lifestyle",
     score: 872,
-    match: "54%",
+    match: 54,
     avgViews: "85K",
     pills: ["Japan Culture", "Travel"],
     stars: 3.5,
-    gradient: "from-brand-200 via-brand-100 to-accent-100",
-    featureLabel: "Smart Creator Matching",
-    featureIcon: "🎯",
+    gradient: "from-brand-200/60 via-brand-100/40 to-accent-100/60",
   },
   {
     name: "AnimeFan Alex",
     tags: "Anime Reviews · Otaku",
     score: 849,
-    match: "92%",
+    match: 92,
     avgViews: "110K",
     pills: ["Anime", "Gaming · Japan"],
     stars: 4,
-    gradient: "from-brand-100 via-accent-100 to-pink-100",
-    featureLabel: "Data-Driven Decisions",
-    featureIcon: "📊",
+    gradient: "from-brand-100/60 via-accent-100/40 to-pink-100/60",
   },
   {
     name: "JapaneseWithKai",
     tags: "Learning Japanese",
     score: 804,
-    match: "88%",
+    match: 88,
     avgViews: "75K",
     pills: ["Japan Culture", "Language"],
     stars: 3.5,
-    gradient: "from-accent-100 via-brand-100 to-purple-100",
-    featureLabel: "Campaign Results Tracking",
-    featureIcon: "📈",
+    gradient: "from-accent-100/60 via-brand-100/40 to-purple-100/60",
   },
   {
     name: "TokyoTraveler",
     tags: "Japan · Travel · Vlogs",
     score: 788,
-    match: "80%",
+    match: 80,
     avgViews: "90K",
     pills: ["Japan", "Food · Travel"],
     stars: 3.5,
-    gradient: "from-blue-100 via-brand-100 to-accent-100",
-    featureLabel: "Empowering Creators",
-    featureIcon: "💪",
+    gradient: "from-blue-100/60 via-brand-100/40 to-accent-100/60",
   },
 ];
 
+const STATS = [
+  { value: "2,000+", label: "Brands" },
+  { value: "15K+", label: "Creators" },
+  { value: "200%", label: "Avg ROI Lift" },
+  { value: "4.9/5", label: "Satisfaction" },
+];
+
 const TRUSTED_BRANDS = ["Airbnb", "PlayStation", "Hilton", "Samsung", "Red Bull"];
+
+/* ------------------------------------------------------------------ */
+/*  Sub-components                                                     */
+/* ------------------------------------------------------------------ */
 
 function StarRating({ rating }: { rating: number }) {
   return (
     <div className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((i) => (
-        <svg
+        <Star
           key={i}
           className={`h-3.5 w-3.5 ${
             i <= Math.floor(rating)
-              ? "text-accent-primary"
+              ? "fill-accent-primary text-accent-primary"
               : i - 0.5 <= rating
-                ? "text-accent-200"
-                : "text-gray-200"
+                ? "fill-accent-200 text-accent-200"
+                : "fill-gray-200 text-gray-200"
           }`}
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
+        />
       ))}
     </div>
+  );
+}
+
+function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
+  return (
+    <span className="tabular-nums">
+      {value}
+      {suffix}
+    </span>
   );
 }
 
@@ -89,398 +233,590 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* ── Navbar ── */}
-      <nav className="sticky top-0 z-30 border-b border-surface-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-          <Link href="/" className="flex items-center gap-2 text-lg font-bold text-brand-primary">
-            <Image src="/mascot.png" alt="" width={28} height={28} className="h-7 w-7 rounded-lg object-cover" />
-            <span>
-              Brand<span className="text-gray-800">Buddy</span>
+      <motion.nav
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="sticky top-0 z-30 border-b border-surface-200/80 bg-white/80 backdrop-blur-xl"
+      >
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+          <Link href="/" className="flex items-center gap-2.5">
+            <Image
+              src="/mascot.png"
+              alt=""
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-xl object-cover"
+            />
+            <span className="text-lg font-bold">
+              <span className="text-brand-primary">Brand</span>
+              <span className="text-gray-800">Buddy</span>
             </span>
           </Link>
 
-          <div className="hidden items-center gap-7 md:flex">
-            <a href="#features" className="text-sm text-gray-600 transition-colors hover:text-brand-primary">
-              Features
-            </a>
-            <a href="#brands" className="text-sm text-gray-600 transition-colors hover:text-brand-primary">
-              For Brands
-            </a>
-            <a href="#creators" className="text-sm text-gray-600 transition-colors hover:text-brand-primary">
-              For Creators
-            </a>
-            <a href="#" className="text-sm text-gray-600 transition-colors hover:text-brand-primary">
-              Pricing
-            </a>
-            <a href="#" className="text-sm text-gray-600 transition-colors hover:text-brand-primary">
-              FAQ
-            </a>
+          <div className="hidden items-center gap-8 md:flex">
+            {["Features", "For Brands", "For Creators", "Pricing", "FAQ"].map(
+              (item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
+                  className="text-sm font-medium text-gray-500 transition-colors hover:text-gray-900"
+                >
+                  {item}
+                </a>
+              )
+            )}
           </div>
 
-          <Link
-            href="/login"
-            className="rounded-full bg-brand-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-500"
-          >
-            Get Started
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="hidden text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 sm:block"
+            >
+              Log in
+            </Link>
+            <Link
+              href="/signup"
+              className="group flex items-center gap-1.5 rounded-full bg-brand-primary px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-brand-500 hover:shadow-lg hover:shadow-brand-primary/25"
+            >
+              Get Started
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#e8f0fe] via-[#fef6e4] to-[#f3e8ff]">
-        <div className="mx-auto grid max-w-6xl items-center gap-8 px-6 pb-10 pt-12 md:grid-cols-2 md:pb-0 md:pt-16">
-          {/* Left column */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#edf3ff] via-[#fef8ec] to-white">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-6 pb-16 pt-16 md:grid-cols-2 md:pb-0 md:pt-20">
+          {/* Left */}
           <div className="relative z-10">
-            <h1 className="text-3xl font-bold leading-tight text-gray-900 md:text-4xl lg:text-[2.75rem]">
-              Connect with the{" "}
-              <span className="text-accent-primary">right creators</span> for your
-              brand
-            </h1>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-gray-500">
-              Find trusted influencers that are a perfect match for your audience and
-              goals, all in one place.
-            </p>
+            <FadeIn delay={0.1}>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3.5 py-1.5">
+                <Sparkles className="h-3.5 w-3.5 text-brand-primary" />
+                <span className="text-xs font-semibold text-brand-primary">
+                  AI-Powered Creator Matching
+                </span>
+              </div>
+            </FadeIn>
 
-            <div className="mt-6 flex max-w-sm items-center gap-2">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="flex-1 rounded-full border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 outline-none placeholder:text-gray-400 focus:border-brand-primary focus:ring-2 focus:ring-brand-200"
-              />
-              <Link
-                href="/login"
-                className="whitespace-nowrap rounded-full bg-accent-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-400"
-              >
-                Get Started Free
-              </Link>
-            </div>
+            <FadeIn delay={0.2}>
+              <h1 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-gray-900 md:text-5xl lg:text-[3.25rem]">
+                Connect with the{" "}
+                <span className="bg-gradient-to-r from-accent-primary to-accent-400 bg-clip-text text-transparent">
+                  right creators
+                </span>{" "}
+                for your brand
+              </h1>
+            </FadeIn>
 
-            <p className="mt-3 text-xs text-gray-400">
-              Free to try, no credit card required
-            </p>
-
-            {/* Trusted brands inline */}
-            <div className="mt-8">
-              <p className="mb-3 text-sm font-semibold text-gray-700">
-                Trusted by top brands
+            <FadeIn delay={0.35}>
+              <p className="mt-5 max-w-lg text-base leading-relaxed text-gray-500">
+                Find trusted influencers that are a perfect match for your
+                audience and goals, all in one place.
               </p>
-              <div className="flex flex-wrap items-center gap-5">
+            </FadeIn>
+
+            <FadeIn delay={0.45}>
+              <div className="mt-8 flex max-w-md items-center gap-2">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="flex-1 rounded-full border border-gray-200 bg-white px-5 py-3 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-400 focus:border-brand-primary focus:ring-2 focus:ring-brand-200"
+                />
+                <Link
+                  href="/signup"
+                  className="group flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent-primary px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-accent-primary/20 transition-all hover:bg-accent-400 hover:shadow-xl hover:shadow-accent-primary/30"
+                >
+                  Get Started Free
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              </div>
+              <p className="mt-3 text-xs text-gray-400">
+                Free to try, no credit card required
+              </p>
+            </FadeIn>
+
+            <FadeIn delay={0.55}>
+              <div className="mt-10">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  Trusted by top brands
+                </p>
+                <div className="flex flex-wrap items-center gap-6">
+                  {TRUSTED_BRANDS.map((brand, i) => (
+                    <motion.span
+                      key={brand}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.7 + i * 0.1 }}
+                      className="text-sm font-bold tracking-wide text-gray-300 transition-colors hover:text-gray-400"
+                    >
+                      {brand}
+                    </motion.span>
+                  ))}
+                </div>
+              </div>
+            </FadeIn>
+          </div>
+
+          {/* Right — mascot */}
+          <FadeIn delay={0.3} direction="right" className="relative flex items-end justify-center">
+            <motion.div
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Image
+                src="/mascot.png"
+                alt="BrandBuddy otter mascot"
+                width={440}
+                height={440}
+                className="relative z-10 h-auto w-[300px] drop-shadow-2xl md:w-[400px] lg:w-[440px]"
+                priority
+              />
+            </motion.div>
+          </FadeIn>
+        </div>
+
+        {/* Decorative elements */}
+        <div className="pointer-events-none absolute -left-40 top-20 h-[500px] w-[500px] rounded-full bg-brand-100/30 blur-[100px]" />
+        <div className="pointer-events-none absolute -right-40 bottom-0 h-[400px] w-[400px] rounded-full bg-accent-100/30 blur-[100px]" />
+      </section>
+
+      {/* ── Stats bar ── */}
+      <section className="relative z-10 -mt-8 px-6">
+        <div className="mx-auto max-w-4xl">
+          <StaggerContainer
+            className="grid grid-cols-2 gap-4 rounded-2xl border border-surface-200/80 bg-white p-6 shadow-xl shadow-gray-900/5 md:grid-cols-4 md:gap-8"
+            stagger={0.1}
+          >
+            {STATS.map((stat) => (
+              <StaggerItem key={stat.label} className="text-center">
+                <p className="text-2xl font-extrabold text-gray-900 md:text-3xl">
+                  <AnimatedCounter value={stat.value} />
+                </p>
+                <p className="mt-1 text-xs font-medium text-gray-500">
+                  {stat.label}
+                </p>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
+      {/* ── Features ── */}
+      <section id="features" className="px-6 py-24">
+        <div className="mx-auto max-w-6xl">
+          <FadeIn className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">
+              Everything you need to run{" "}
+              <span className="text-brand-primary">winning campaigns</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-gray-500">
+              The all-in-one platform for finding, vetting, and collaborating
+              with influencers who fit your brand.
+            </p>
+          </FadeIn>
+
+          <StaggerContainer className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4" stagger={0.12}>
+            {FEATURES.map((f) => (
+              <StaggerItem key={f.title}>
+                <motion.div
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  className="group h-full rounded-2xl border border-surface-200/60 bg-white p-6 shadow-sm transition-shadow hover:shadow-lg"
+                >
+                  <div
+                    className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${f.bg}`}
+                  >
+                    <f.icon className={`h-6 w-6 ${f.color}`} />
+                  </div>
+                  <h3 className="text-base font-semibold text-gray-800">
+                    {f.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-500">
+                    {f.desc}
+                  </p>
+                </motion.div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
+      {/* ── Creator showcase ── */}
+      <section id="for-brands" className="bg-gradient-to-b from-surface-50 to-white px-6 py-24">
+        <div className="mx-auto max-w-6xl">
+          <FadeIn className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">
+              Discover high-performing creators
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-gray-500">
+              Every creator gets a BrandBuddy Score — a single number that tells
+              you how well they fit your campaign.
+            </p>
+          </FadeIn>
+
+          <StaggerContainer className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" stagger={0.1}>
+            {CREATOR_CARDS.map((c) => (
+              <StaggerItem key={c.name}>
+                <motion.div
+                  whileHover={{ y: -8, transition: { duration: 0.25 } }}
+                  className="group overflow-hidden rounded-2xl border border-surface-200/60 bg-white shadow-sm transition-shadow hover:shadow-xl"
+                >
+                  {/* Gradient banner */}
+                  <div className={`relative h-20 bg-gradient-to-r ${c.gradient}`}>
+                    <div className="absolute -bottom-1 left-0 right-0 h-5 rounded-t-[20px] bg-white" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="px-5 pb-5 pt-1">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-primary ring-2 ring-white">
+                        {c.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">
+                          {c.name}
+                        </p>
+                        <p className="text-[11px] text-gray-400">{c.tags}</p>
+                      </div>
+                    </div>
+
+                    {/* Score */}
+                    <div className="mt-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
+                          Score
+                        </p>
+                        <p className="text-lg font-bold text-gray-900">
+                          {c.score}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
+                          Match
+                        </p>
+                        <p className="text-lg font-bold text-brand-primary">
+                          {c.match}%
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Avg views */}
+                    <div className="mt-3 flex items-center gap-1.5 text-xs text-gray-500">
+                      <Eye className="h-3.5 w-3.5" />
+                      Avg Views:{" "}
+                      <span className="font-semibold text-gray-700">
+                        {c.avgViews}
+                      </span>
+                    </div>
+
+                    {/* Tags */}
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {c.pills.map((pill) => (
+                        <span
+                          key={pill}
+                          className="rounded-full bg-surface-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-500"
+                        >
+                          {pill}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Stars + CTA */}
+                    <div className="mt-4 flex items-center justify-between border-t border-surface-200/60 pt-3">
+                      <StarRating rating={c.stars} />
+                      <Link
+                        href="/signup"
+                        className="flex items-center gap-1 rounded-full bg-brand-primary px-3.5 py-1.5 text-[11px] font-semibold text-white transition-all hover:bg-brand-500 hover:shadow-md hover:shadow-brand-primary/20"
+                      >
+                        View Profile
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
+      {/* ── For Creators ── */}
+      <section id="for-creators" className="px-6 py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid items-center gap-16 lg:grid-cols-2">
+            {/* Left — Score card */}
+            <FadeIn direction="left">
+              <div className="rounded-2xl border border-surface-200/60 bg-gradient-to-br from-white via-surface-50 to-brand-50 p-8 shadow-xl shadow-gray-900/5">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-primary text-xl font-bold text-white shadow-lg shadow-brand-primary/30">
+                    A
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold text-gray-800">
+                      Ashley Peters
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Travel &amp; Lifestyle
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-6 grid grid-cols-3 gap-3">
+                  {[
+                    { val: "89", label: "Buddy Score", color: "text-brand-primary" },
+                    { val: "284K", label: "Subscribers", color: "text-gray-900" },
+                    { val: "6.8%", label: "Engagement", color: "text-green-600" },
+                  ].map((s) => (
+                    <div
+                      key={s.label}
+                      className="rounded-xl bg-white p-3 text-center shadow-sm"
+                    >
+                      <p className={`text-xl font-bold ${s.color}`}>{s.val}</p>
+                      <p className="mt-0.5 text-[11px] text-gray-500">
+                        {s.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 space-y-2.5">
+                  {[
+                    { label: "Topic Relevance", val: 92, color: "bg-brand-primary" },
+                    { label: "Engagement Health", val: 85, color: "bg-green-500" },
+                    { label: "Authenticity", val: 88, color: "bg-accent-primary" },
+                  ].map((s) => (
+                    <div key={s.label} className="flex items-center gap-3">
+                      <p className="w-32 text-xs font-medium text-gray-500">
+                        {s.label}
+                      </p>
+                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-200">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${s.val}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+                          className={`h-full rounded-full ${s.color}`}
+                        />
+                      </div>
+                      <span className="w-8 text-right text-xs font-semibold text-gray-700">
+                        {s.val}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* Right — text */}
+            <FadeIn direction="right">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">
+                  Creators: let brands find{" "}
+                  <span className="bg-gradient-to-r from-accent-primary to-accent-400 bg-clip-text text-transparent">
+                    you
+                  </span>
+                </h2>
+                <p className="mt-5 text-base leading-relaxed text-gray-500">
+                  Your BrandBuddy Score highlights your strengths — engagement
+                  quality, audience authenticity, and content consistency — so the
+                  right brands come to you.
+                </p>
+                <ul className="mt-8 space-y-4">
+                  {[
+                    "Get matched with brands that align with your content",
+                    "See transparent deal terms and negotiate in-app",
+                    "Build your track record with verified reviews",
+                    "Free forever for creators — no commissions",
+                  ].map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-3 text-sm text-gray-600"
+                    >
+                      <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-50">
+                        <svg
+                          className="h-3 w-3 text-brand-primary"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </div>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/signup"
+                  className="group mt-8 inline-flex items-center gap-2 rounded-full bg-accent-primary px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-accent-primary/20 transition-all hover:bg-accent-400 hover:shadow-xl hover:shadow-accent-primary/30"
+                >
+                  Join as a Creator
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              </div>
+            </FadeIn>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Testimonial + CTA ── */}
+      <section className="bg-gradient-to-b from-surface-50 to-white px-6 py-24">
+        <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2">
+          {/* Testimonial */}
+          <FadeIn direction="left">
+            <div className="flex h-full flex-col justify-between rounded-2xl border border-surface-200/60 bg-white p-8 shadow-sm">
+              <div>
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star
+                      key={i}
+                      className="h-5 w-5 fill-accent-primary text-accent-primary"
+                    />
+                  ))}
+                </div>
+                <p className="mt-5 text-base leading-relaxed text-gray-600">
+                  &ldquo;Finding the right influencers used to be a guessing game.{" "}
+                  <span className="font-semibold text-gray-800">
+                    With BrandBuddy, it&apos;s a science. We saw a 200% increase
+                    in campaign engagement.
+                  </span>
+                  &rdquo;
+                </p>
+              </div>
+              <div className="mt-8 flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-100 text-sm font-bold text-accent-primary">
+                  SC
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">
+                    Sarah Collins
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Director of Marketing, Hilton Hotels
+                  </p>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+
+          {/* CTA */}
+          <FadeIn direction="right">
+            <div className="flex h-full flex-col justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-brand-500 p-8 text-white shadow-xl shadow-brand-primary/20">
+              <h3 className="text-2xl font-bold">
+                Get started today, it&apos;s free!
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/80">
+                Sign up takes just 2 minutes. Join thousands of brands and
+                creators growing together.
+              </p>
+              <div className="mt-6 flex items-center gap-2">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="flex-1 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm text-white outline-none placeholder:text-white/50 backdrop-blur focus:border-white/40 focus:ring-2 focus:ring-white/20"
+                />
+                <Link
+                  href="/signup"
+                  className="shrink-0 whitespace-nowrap rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-primary transition-all hover:bg-white/90 hover:shadow-lg"
+                >
+                  Get Started Free
+                </Link>
+              </div>
+              <p className="mt-3 text-xs text-white/50">
+                Free to try, no credit card required
+              </p>
+              <div className="mt-6 flex flex-wrap items-center gap-4">
                 {TRUSTED_BRANDS.map((brand) => (
                   <span
                     key={brand}
-                    className="text-sm font-bold tracking-wide text-gray-400"
+                    className="text-xs font-bold tracking-wide text-white/30"
                   >
                     {brand}
                   </span>
                 ))}
               </div>
             </div>
-          </div>
-
-          {/* Right column — otter mascot */}
-          <div className="relative flex items-end justify-center">
-            <Image
-              src="/mascot.png"
-              alt="BrandBuddy otter mascot"
-              width={420}
-              height={420}
-              className="relative z-10 h-auto w-[320px] md:w-[420px]"
-              priority
-            />
-          </div>
-        </div>
-
-        {/* Soft cloud shapes */}
-        <div className="pointer-events-none absolute -left-20 top-0 h-40 w-80 rounded-full bg-white/40 blur-3xl" />
-        <div className="pointer-events-none absolute -right-20 top-0 h-40 w-80 rounded-full bg-white/40 blur-3xl" />
-      </section>
-
-      {/* ── Trusted section ── */}
-      <section id="features" className="bg-surface-50 px-6 py-16">
-        <div className="mx-auto max-w-6xl text-center">
-          <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">
-            Trusted by 2,000+ brands{" "}
-            <span className="text-accent-primary">big</span> and small
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-gray-500">
-            The all-in-one platform for finding, vetting, and collaborating with
-            influencers who fit your brand.
-          </p>
-
-          {/* Creator feature cards */}
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {CREATOR_CARDS.map((c) => (
-              <div
-                key={c.name}
-                className="overflow-hidden rounded-card bg-white shadow-card transition-shadow hover:shadow-card-hover"
-              >
-                {/* Gradient banner */}
-                <div
-                  className={`h-20 bg-gradient-to-r ${c.gradient} relative`}
-                >
-                  <div className="absolute -bottom-1 left-0 right-0 h-4 rounded-t-3xl bg-white" />
-                </div>
-
-                {/* Feature label */}
-                <div className="px-4 pb-1 pt-1">
-                  <p className="flex items-center gap-1.5 text-xs font-semibold text-gray-700">
-                    <span>{c.featureIcon}</span>
-                    {c.featureLabel}
-                  </p>
-                </div>
-
-                {/* Creator info */}
-                <div className="px-4 pb-4 pt-2">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-primary">
-                      {c.name.charAt(0)}
-                    </div>
-                    <div className="text-left">
-                      <p className="text-sm font-semibold text-gray-800">
-                        {c.name}
-                      </p>
-                      <p className="text-[11px] text-gray-400">{c.tags}</p>
-                    </div>
-                  </div>
-
-                  {/* Score + match */}
-                  <div className="mt-3 flex items-center gap-3 text-xs">
-                    <span className="text-gray-500">
-                      BrandBuddy Score:{" "}
-                      <span className="font-bold text-gray-800">{c.score}</span>
-                    </span>
-                    <span className="font-medium text-brand-primary">
-                      &#9670; {c.match}
-                    </span>
-                  </div>
-
-                  {/* Avg views */}
-                  <div className="mt-1.5 flex items-center gap-1 text-xs text-gray-500">
-                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                    Avg Views:{" "}
-                    <span className="font-bold text-gray-800">{c.avgViews}</span>
-                  </div>
-
-                  {/* Tags */}
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {c.pills.map((pill) => (
-                      <span
-                        key={pill}
-                        className="rounded-full bg-surface-100 px-2.5 py-0.5 text-[11px] text-gray-500"
-                      >
-                        {pill}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Stars + CTA */}
-                  <div className="mt-3 flex items-center justify-between">
-                    <StarRating rating={c.stars} />
-                    <Link
-                      href="/login"
-                      className="rounded-full bg-brand-primary px-3.5 py-1.5 text-[11px] font-semibold text-white transition-colors hover:bg-brand-500"
-                    >
-                      View Profile
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Testimonial + CTA row ── */}
-      <section className="bg-white px-6 py-14">
-        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-2">
-          {/* Testimonial */}
-          <div className="rounded-card bg-surface-50 p-8">
-            <div className="flex items-start gap-4">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-accent-100 text-2xl">
-                👩
-              </div>
-              <div>
-                <p className="text-sm leading-relaxed text-gray-600">
-                  Finding the right influencers used to be a guessing game.{" "}
-                  <span className="font-semibold text-gray-800">
-                    With BrandBuddy, it&apos;s a science. We saw a 200% increase in
-                    campaign engagement.
-                  </span>
-                </p>
-              </div>
-            </div>
-            <div className="mt-5 flex items-center gap-3">
-              {/* 5 stars */}
-              <div className="flex gap-0.5">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <svg
-                    key={i}
-                    className="h-4 w-4 text-accent-primary"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-800">
-                  Sarah Collins
-                </p>
-                <p className="text-xs text-gray-500">
-                  Director of Marketing, Hilton Hotels
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* CTA card */}
-          <div className="rounded-card bg-gradient-to-br from-brand-50 via-surface-50 to-accent-50 p-8">
-            <h3 className="text-xl font-bold text-gray-900">
-              Get started today, it&apos;s free!
-            </h3>
-            <p className="mt-2 text-sm text-gray-500">
-              Sign up takes just 2 minutes. Join thousands of brands and creators
-              growing together.
-            </p>
-            <div className="mt-5 flex items-center gap-2">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="flex-1 rounded-full border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 outline-none placeholder:text-gray-400 focus:border-brand-primary focus:ring-2 focus:ring-brand-200"
-              />
-              <Link
-                href="/login"
-                className="whitespace-nowrap rounded-full bg-accent-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-400"
-              >
-                Get Started Free
-              </Link>
-            </div>
-            <p className="mt-3 text-xs text-gray-400">
-              Free to try, no credit card required
-            </p>
-            {/* Brand logos */}
-            <div className="mt-5 flex flex-wrap items-center gap-4">
-              {TRUSTED_BRANDS.map((brand) => (
-                <span
-                  key={brand}
-                  className="text-xs font-bold tracking-wide text-gray-300"
-                >
-                  {brand}
-                </span>
-              ))}
-            </div>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-surface-200 bg-white px-6 py-10">
+      <footer className="border-t border-surface-200/60 bg-white px-6 py-12">
         <div className="mx-auto max-w-6xl">
-          {/* Link columns */}
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <p className="mb-3 text-sm font-semibold text-gray-700">Product</p>
-              <ul className="space-y-2 text-sm text-gray-500">
-                <li>
-                  <a href="#features" className="hover:text-brand-primary">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-brand-primary">
-                    Pricing
-                  </a>
-                </li>
-              </ul>
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+            {/* Brand */}
+            <div className="lg:col-span-2">
+              <Link href="/" className="flex items-center gap-2.5">
+                <Image
+                  src="/mascot.png"
+                  alt=""
+                  width={28}
+                  height={28}
+                  className="h-7 w-7 rounded-lg object-cover"
+                />
+                <span className="text-lg font-bold">
+                  <span className="text-brand-primary">Brand</span>
+                  <span className="text-gray-800">Buddy</span>
+                </span>
+              </Link>
+              <p className="mt-3 max-w-xs text-sm leading-relaxed text-gray-500">
+                Data-driven creator-brand matching for campaigns that actually
+                perform.
+              </p>
             </div>
-            <div>
-              <p className="mb-3 text-sm font-semibold text-gray-700">Pricing</p>
-              <ul className="space-y-2 text-sm text-gray-500">
-                <li>
-                  <a href="#brands" className="hover:text-brand-primary">
-                    For Brands
-                  </a>
-                </li>
-                <li>
-                  <a href="#creators" className="hover:text-brand-primary">
-                    For Creators
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="mb-3 text-sm font-semibold text-gray-700">Resources</p>
-              <ul className="space-y-2 text-sm text-gray-500">
-                <li>
-                  <a href="#" className="hover:text-brand-primary">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-brand-primary">
-                    Help Center
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="mb-3 text-sm font-semibold text-gray-700">Company</p>
-              <ul className="space-y-2 text-sm text-gray-500">
-                <li>
-                  <a href="#" className="hover:text-brand-primary">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-brand-primary">
-                    Contact
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-brand-primary">
-                    Careers
-                  </a>
-                </li>
-              </ul>
-            </div>
+
+            {/* Links */}
+            {[
+              {
+                title: "Product",
+                links: ["Features", "Pricing", "For Brands", "For Creators"],
+              },
+              {
+                title: "Resources",
+                links: ["Blog", "Help Center", "API Docs"],
+              },
+              {
+                title: "Company",
+                links: ["About Us", "Contact", "Careers"],
+              },
+            ].map((col) => (
+              <div key={col.title}>
+                <p className="mb-3 text-sm font-semibold text-gray-800">
+                  {col.title}
+                </p>
+                <ul className="space-y-2.5">
+                  {col.links.map((link) => (
+                    <li key={link}>
+                      <a
+                        href="#"
+                        className="text-sm text-gray-500 transition-colors hover:text-brand-primary"
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
 
-          {/* Bottom bar */}
-          <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-surface-200 pt-6 sm:flex-row">
+          {/* Bottom */}
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-surface-200/60 pt-8 sm:flex-row">
             <p className="text-xs text-gray-400">
               &copy; BrandBuddy 2026. All rights reserved.
             </p>
-            {/* Social icons */}
-            <div className="flex items-center gap-4">
-              {["twitter", "youtube", "facebook", "instagram"].map((s) => (
+            <div className="flex items-center gap-3">
+              {[Twitter, Youtube, Facebook, Instagram].map((Icon, i) => (
                 <a
-                  key={s}
+                  key={i}
                   href="#"
-                  className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-surface-100 hover:text-gray-600"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-gray-400 transition-all hover:bg-surface-100 hover:text-gray-600"
                 >
-                  {s === "twitter" && (
-                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M22.46 6c-.77.35-1.6.58-2.46.69a4.3 4.3 0 001.88-2.38 8.59 8.59 0 01-2.72 1.04 4.28 4.28 0 00-7.32 3.91A12.16 12.16 0 013.16 4.86a4.28 4.28 0 001.32 5.72 4.24 4.24 0 01-1.94-.54v.05a4.28 4.28 0 003.43 4.2 4.27 4.27 0 01-1.93.07 4.29 4.29 0 004 2.98A8.59 8.59 0 012 19.54a12.13 12.13 0 006.56 1.92c7.88 0 12.2-6.53 12.2-12.2 0-.19 0-.37-.01-.56A8.72 8.72 0 0024 5.06a8.58 8.58 0 01-2.54.7z" />
-                    </svg>
-                  )}
-                  {s === "youtube" && (
-                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M23.5 6.19a3.02 3.02 0 00-2.12-2.14C19.55 3.5 12 3.5 12 3.5s-7.55 0-9.38.55A3.02 3.02 0 00.5 6.19 31.67 31.67 0 000 12a31.67 31.67 0 00.5 5.81 3.02 3.02 0 002.12 2.14c1.83.55 9.38.55 9.38.55s7.55 0 9.38-.55a3.02 3.02 0 002.12-2.14A31.67 31.67 0 0024 12a31.67 31.67 0 00-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z" />
-                    </svg>
-                  )}
-                  {s === "facebook" && (
-                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.025 4.388 11.022 10.125 11.927v-8.437H7.078v-3.49h3.047V9.43c0-3.024 1.792-4.698 4.533-4.698 1.312 0 2.686.235 2.686.235v2.97H15.83c-1.491 0-1.956.93-1.956 1.886v2.264h3.328l-.532 3.49h-2.796v8.437C19.612 23.095 24 18.098 24 12.073z" />
-                    </svg>
-                  )}
-                  {s === "instagram" && (
-                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-                    </svg>
-                  )}
+                  <Icon className="h-4 w-4" />
                 </a>
               ))}
             </div>

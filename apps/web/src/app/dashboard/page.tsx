@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import { createAuthServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -8,21 +10,13 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Welcome back</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Signed in as {user?.email}
-        </p>
-      </div>
+  if (!user) redirect("/login");
 
-      <div className="rounded-lg border border-dashed p-12 text-center">
-        <h2 className="text-lg font-medium">Dashboard</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Your personalized dashboard is coming soon.
-        </p>
-      </div>
-    </div>
-  );
+  const role = user.user_metadata?.role as string | undefined;
+
+  if (role === "brand") redirect("/brand");
+  if (role === "admin") redirect("/admin");
+
+  // Default to creator dashboard
+  redirect("/creator");
 }
