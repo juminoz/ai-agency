@@ -86,7 +86,7 @@ export default function SignupPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold">Create an account</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Sign up to get started with Vettd
+            Sign up to get started with BrandBuddy
           </p>
         </div>
 
