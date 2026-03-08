@@ -26,7 +26,7 @@ export interface MatchResult {
  */
 export async function matchChannels(query: MatchQuery): Promise<MatchResult[]> {
   const {
-    keywords: _keywords,
+    keywords,
     minSubscribers = 0,
     maxSubscribers,
     minScore = 0,
@@ -81,12 +81,31 @@ export async function matchChannels(query: MatchQuery): Promise<MatchResult[]> {
     (channels as Channel[]).map((c) => [c.channel_id, c])
   );
 
-  // Combine and filter
+  // Combine and filter by keywords
   const results: MatchResult[] = [];
+  const keywordLower = keywords.map((k) => k.toLowerCase());
 
   for (const score of scores as ChannelScore[]) {
     const channel = channelMap.get(score.channel_id);
     if (!channel) continue;
+
+    // Filter by keywords if provided
+    if (keywordLower.length > 0) {
+      const searchableText = [
+        channel.title,
+        channel.description,
+        channel.custom_url,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      const hasKeywordMatch = keywordLower.some(
+        (kw) => kw.length >= 2 && searchableText.includes(kw)
+      );
+
+      if (!hasKeywordMatch) continue;
+    }
 
     // Generate match reason
     const reasons: string[] = [];
