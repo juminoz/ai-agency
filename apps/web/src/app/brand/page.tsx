@@ -8,23 +8,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import brands from "@/data/mock/brands.json";
-import deals from "@/data/mock/deals.json";
-
+import { getBrandWithBriefs, getDeals } from "@/lib/data";
 
 // Use NovaTech (brand-1) as the logged-in brand
-const brand = brands.find((b) => b.id === "brand-1")!;
+const BRAND_ID = "brand-1";
 
-// Derive stats from mock data
-const brandDeals = deals.filter((d) => d.brandId === brand.id);
-const totalBriefs = brand.activeBriefs.length;
-const creatorsContacted = brandDeals.length;
-const avgMatchScore = 89; // Mock value — NovaTech's match w/ Marcus is 89
-const budgetSpent = brandDeals
-  .filter((d) => d.agreedRate !== null)
-  .reduce((sum, d) => sum + (d.agreedRate ?? 0), 0);
-
-// Recent activity feed (inline mock)
+// Recent activity feed (static for now — could be derived from notifications later)
 const recentActivity: {
   id: string;
   icon: LucideIcon;
@@ -75,46 +64,66 @@ const recentActivity: {
   },
 ];
 
-const stats = [
-  {
-    label: "Active Campaigns",
-    value: totalBriefs.toString(),
-    icon: (
-      <svg className="h-5 w-5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Creators Contacted",
-    value: creatorsContacted.toString(),
-    icon: (
-      <svg className="h-5 w-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Avg Match Score",
-    value: avgMatchScore.toString(),
-    icon: (
-      <svg className="h-5 w-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Budget Spent",
-    value: `$${budgetSpent.toLocaleString()}`,
-    icon: (
-      <svg className="h-5 w-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-  },
-];
+export default async function BrandDashboardPage() {
+  const [brandData, brandDeals] = await Promise.all([
+    getBrandWithBriefs(BRAND_ID),
+    getDeals({ brandId: BRAND_ID }),
+  ]);
 
-export default function BrandDashboardPage() {
+  if (!brandData) {
+    return <p className="p-8 text-gray-500">Brand not found.</p>;
+  }
+
+  const { brand, briefs } = brandData;
+
+  const totalBriefs = briefs.filter((b) => b.status === "active").length;
+  const creatorsContacted = brandDeals.length;
+  const avgMatchScore = brandDeals.length > 0
+    ? Math.round(brandDeals.reduce((sum, d) => sum + (d.match_score ?? 0), 0) / brandDeals.length)
+    : 0;
+  const budgetSpent = brandDeals
+    .filter((d) => d.agreed_rate !== null)
+    .reduce((sum, d) => sum + (d.agreed_rate ?? 0), 0);
+
+  const stats = [
+    {
+      label: "Active Campaigns",
+      value: totalBriefs.toString(),
+      icon: (
+        <svg className="h-5 w-5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+        </svg>
+      ),
+    },
+    {
+      label: "Creators Contacted",
+      value: creatorsContacted.toString(),
+      icon: (
+        <svg className="h-5 w-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+    },
+    {
+      label: "Avg Match Score",
+      value: avgMatchScore.toString(),
+      icon: (
+        <svg className="h-5 w-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      ),
+    },
+    {
+      label: "Budget Spent",
+      value: `$${budgetSpent.toLocaleString()}`,
+      icon: (
+        <svg className="h-5 w-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Greeting */}
@@ -153,10 +162,9 @@ export default function BrandDashboardPage() {
             Active Briefs
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {brand.activeBriefs.map((brief) => {
-              // Count matching deals for this brief
+            {briefs.filter((b) => b.status === "active").map((brief) => {
               const matchedCreators = brandDeals.filter(
-                (d) => d.brief.title === brief.title
+                (d) => d.brief_title === brief.title
               ).length;
 
               return (
@@ -180,7 +188,7 @@ export default function BrandDashboardPage() {
                       <svg className="h-3.5 w-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V7m0 1v8m0 0v1" />
                       </svg>
-                      ${brief.budget.min.toLocaleString()} - ${brief.budget.max.toLocaleString()}
+                      ${brief.budget_min.toLocaleString()} - ${brief.budget_max.toLocaleString()}
                     </span>
                     <span className="flex items-center gap-1 capitalize">
                       <svg className="h-3.5 w-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

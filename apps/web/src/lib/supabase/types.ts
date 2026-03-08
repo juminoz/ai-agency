@@ -97,6 +97,163 @@ export interface Profile {
   updated_at: string;
 }
 
+// ── BrandBuddy marketplace types ──────────────────────────────────────────
+
+export type ProfileSubtype = "creator" | "brand" | null;
+
+export interface CreatorProfile {
+  id: string;
+  user_id: string | null;
+  channel_id: string | null;
+  handle: string;
+  name: string;
+  avatar: string | null;
+  bio: string | null;
+  platform: "youtube" | "twitch";
+  subscriber_count: number;
+  video_count: number;
+  categories: string[];
+  niche_tags: string[];
+  availability_status: "open" | "limited" | "closed";
+  minimum_deal_size: number;
+  brand_preferences_open: string[];
+  brand_preferences_blocked: string[];
+  public_profile_url: string | null;
+  channel_url: string | null;
+  score_overall: number;
+  score_topic_relevance: number;
+  score_recent_views: number;
+  score_engagement_health: number;
+  score_authenticity: number;
+  score_activity_consistency: number;
+  score_comment_audience_match: number;
+  niche_percentile: number;
+  niche_category: string | null;
+  niche_tier: string | null;
+  views_trend: string | null;
+  engagement_trend: string | null;
+  trend_narrative: string | null;
+  authenticity_score: number;
+  fake_follower_risk: string;
+  view_spike_detected: boolean;
+  comment_quality: number;
+  like_to_view_normality: number;
+  audience_interests: { category: string; confidence: number }[];
+  completed_campaigns: number;
+  delivery_rate: number;
+  avg_performance_vs_projection: string | null;
+  avg_rating: number;
+  deal_history: { brand: string; rate: number; format: string; date: string; outcome: string }[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreatorVideo {
+  id: string;
+  creator_id: string;
+  video_id: string | null;
+  title: string;
+  published_at: string | null;
+  views: number;
+  likes: number;
+  comments: number;
+  engagement_rate: number;
+  created_at: string;
+}
+
+export interface Brand {
+  id: string;
+  user_id: string | null;
+  name: string;
+  logo: string | null;
+  category: string | null;
+  description: string | null;
+  target_age_range: string | null;
+  target_gender: string;
+  target_interests: string[];
+  target_locations: string[];
+  completed_deals: number;
+  reliability_score: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Brief {
+  id: string;
+  brand_id: string;
+  title: string;
+  description: string | null;
+  budget_min: number;
+  budget_max: number;
+  platform: string;
+  goal: "awareness" | "consideration" | "conversion" | "engagement" | null;
+  content_formats: string[];
+  timeline: string | null;
+  status: "draft" | "active" | "paused" | "completed" | "cancelled";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Deal {
+  id: string;
+  brand_id: string;
+  creator_id: string;
+  brief_id: string | null;
+  status: "received" | "negotiating" | "agreed" | "live" | "completed" | "reviewed" | "declined" | "cancelled";
+  brief_title: string | null;
+  brief_budget_min: number;
+  brief_budget_max: number;
+  brief_format: string | null;
+  brief_timeline: string | null;
+  brief_goal: string | null;
+  brief_deliverables: string | null;
+  brief_exclusivity_category: string | null;
+  brief_exclusivity_window: string | null;
+  match_score: number | null;
+  agreed_rate: number | null;
+  campaign_url: string | null;
+  projected_views: number | null;
+  actual_views: number | null;
+  projected_engagements: number | null;
+  actual_engagements: number | null;
+  days_live: number | null;
+  performance_status: "above_target" | "on_target" | "below_target" | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DealMessage {
+  id: string;
+  deal_id: string;
+  sender_type: "brand" | "creator";
+  sender_name: string | null;
+  text: string;
+  sent_at: string;
+}
+
+export interface DealReview {
+  id: string;
+  deal_id: string;
+  reviewer_type: "brand" | "creator";
+  delivery_rating: number | null;
+  communication_rating: number | null;
+  overall_rating: number | null;
+  note: string | null;
+  created_at: string;
+}
+
+export interface Notification {
+  id: string;
+  type: "match_alert" | "new_deal" | "deal_status" | "message" | "campaign_alert" | "data_refresh" | "system";
+  title: string;
+  body: string | null;
+  recipient_type: "brand" | "creator" | "admin" | null;
+  recipient_id: string | null;
+  related_id: string | null;
+  read: boolean;
+  created_at: string;
+}
+
 export interface Database {
   public: {
     Tables: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useMotionValueEvent, useScroll } from "framer-motion";
 import {
   ArrowRight,
   BarChart3,
@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 /* ------------------------------------------------------------------ */
 /*  Animation helpers                                                  */
@@ -230,14 +230,22 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 /* ------------------------------------------------------------------ */
 
 export default function Home() {
+  const [scrolled, setScrolled] = useState(false);
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 40));
+
   return (
     <div className="min-h-screen bg-white">
-      {/* ── Navbar ── */}
+      {/* ── Navbar — transparent, merges with hero ── */}
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="sticky top-0 z-30 border-b border-surface-200/80 bg-white/80 backdrop-blur-xl"
+        className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "border-b border-surface-200/80 bg-white/80 backdrop-blur-xl shadow-sm"
+            : "bg-transparent"
+        }`}
       >
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2.5">
@@ -260,7 +268,9 @@ export default function Home() {
                 <a
                   key={item}
                   href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="text-sm font-medium text-gray-500 transition-colors hover:text-gray-900"
+                  className={`text-sm font-medium transition-colors hover:text-gray-900 ${
+                    scrolled ? "text-gray-500" : "text-gray-600"
+                  }`}
                 >
                   {item}
                 </a>
@@ -271,7 +281,9 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className="hidden text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 sm:block"
+              className={`hidden text-sm font-medium transition-colors hover:text-gray-900 sm:block ${
+                scrolled ? "text-gray-600" : "text-gray-600"
+              }`}
             >
               Log in
             </Link>
@@ -286,8 +298,8 @@ export default function Home() {
         </div>
       </motion.nav>
 
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#edf3ff] via-[#fef8ec] to-white">
+      {/* ── Hero — extends under navbar ── */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#edf3ff] via-[#fef8ec] to-white pt-16">
         <div className="mx-auto grid max-w-6xl items-center gap-8 px-6 pb-16 pt-16 md:grid-cols-2 md:pb-0 md:pt-20">
           {/* Left */}
           <div className="relative z-10">

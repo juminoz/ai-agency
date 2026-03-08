@@ -1,36 +1,27 @@
 import { Flame, Monitor, Star } from "lucide-react";
 import Link from "next/link";
 
-import brandsData from "@/data/mock/brands.json";
-import creatorsData from "@/data/mock/creators.json";
+import { getBrands, getBriefs, getCreatorById } from "@/lib/data";
 
-const creator = creatorsData.find((c) => c.id === "creator-1")!;
+const CREATOR_ID = "creator-1";
 
-function computeMatchScore(brand: (typeof brandsData)[number]): number {
-  const creatorTags = [
-    ...creator.categories.map((c) => c.toLowerCase()),
-    ...creator.nicheTags.map((t) => t.toLowerCase()),
-    ...creator.audienceInterests.map((a) => a.category.toLowerCase()),
+function computeMatchScore(
+  brandInterests: string[],
+  creatorCategories: string[],
+  creatorTags: string[],
+  creatorAudienceInterests: { category: string; confidence: number }[],
+): number {
+  const creatorTerms = [
+    ...creatorCategories.map((c) => c.toLowerCase()),
+    ...creatorTags.map((t) => t.toLowerCase()),
+    ...creatorAudienceInterests.map((a) => a.category.toLowerCase()),
   ];
-  const brandInterests = brand.targetAudience.interests.map((i) =>
-    i.toLowerCase(),
-  );
   const overlap = brandInterests.filter((bi) =>
-    creatorTags.some((ct) => ct.includes(bi) || bi.includes(ct)),
+    creatorTerms.some((ct) => ct.includes(bi.toLowerCase()) || bi.toLowerCase().includes(ct)),
   ).length;
   const base = Math.round((overlap / Math.max(brandInterests.length, 1)) * 100);
   return Math.min(98, Math.max(45, base + 40));
 }
-
-const brandsWithScores = brandsData
-  .map((brand) => ({ ...brand, matchScore: computeMatchScore(brand) }))
-  .filter(
-    (b) =>
-      !creator.brandPreferences.blocked.some((blocked) =>
-        b.category.toLowerCase().includes(blocked),
-      ),
-  )
-  .sort((a, b) => b.matchScore - a.matchScore);
 
 function formatBudget(min: number, max: number): string {
   const fmt = (n: number) =>
@@ -38,7 +29,39 @@ function formatBudget(min: number, max: number): string {
   return `${fmt(min)} – ${fmt(max)}`;
 }
 
-export default function CreatorBrandsPage() {
+export default async function CreatorBrandsPage() {
+  const [creator, allBrands, allBriefs] = await Promise.all([
+    getCreatorById(CREATOR_ID),
+    getBrands(),
+    getBriefs(),
+  ]);
+
+  if (!creator) {
+    return <p className="p-8 text-gray-500">Creator not found.</p>;
+  }
+
+  const brandsWithScores = allBrands
+    .map((brand) => {
+      const brandBriefs = allBriefs.filter((b) => b.brand_id === brand.id && b.status === "active");
+      return {
+        ...brand,
+        matchScore: computeMatchScore(
+          brand.target_interests,
+          creator.categories,
+          creator.niche_tags,
+          creator.audience_interests,
+        ),
+        activeBriefs: brandBriefs,
+      };
+    })
+    .filter(
+      (b) =>
+        !creator.brand_preferences_blocked.some((blocked) =>
+          (b.category ?? "").toLowerCase().includes(blocked),
+        ),
+    )
+    .sort((a, b) => b.matchScore - a.matchScore);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -89,7 +112,7 @@ export default function CreatorBrandsPage() {
                     {brand.category} · {brand.description}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {brand.targetAudience.interests.map((interest) => (
+                    {brand.target_interests.map((interest) => (
                       <span
                         key={interest}
                         className="rounded-full bg-surface-100 px-2.5 py-0.5 text-xs text-gray-600"
@@ -132,11 +155,11 @@ export default function CreatorBrandsPage() {
                           </p>
                         </div>
                         <span className="text-sm font-semibold text-gray-700">
-                          {formatBudget(brief.budget.min, brief.budget.max)}
+                          {formatBudget(brief.budget_min, brief.budget_max)}
                         </span>
                       </div>
                       <div className="mt-2 flex items-center gap-2">
-                        {brief.contentFormat.map((fmt) => (
+                        {brief.content_formats.map((fmt) => (
                           <span
                             key={fmt}
                             className="rounded-full bg-white px-2 py-0.5 text-xs text-gray-500"
@@ -157,7 +180,7 @@ export default function CreatorBrandsPage() {
             {/* Actions */}
             <div className="mt-4 flex items-center justify-between">
               <div className="text-xs text-gray-400">
-                {brand.completedDeals} completed deals on Brand Buddy
+                {brand.completed_deals} completed deals on Brand Buddy
               </div>
               <div className="flex gap-2">
                 <Link

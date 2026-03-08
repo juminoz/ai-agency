@@ -2,11 +2,10 @@ import { Flame, MapPin, Play } from "lucide-react";
 
 import { BrandMatchCard } from "@/components/brand-match-card";
 import { ScoreGauge } from "@/components/score-gauge";
-import brandsData from "@/data/mock/brands.json";
-import creatorsData from "@/data/mock/creators.json";
+import { getBrands, getBriefs, getCreatorById, getCreatorVideos } from "@/lib/data";
+import { type CreatorProfile } from "@/lib/supabase/types";
 
-// Ashley Peters — the logged-in creator
-const creator = creatorsData.find((c) => c.id === "creator-1")!;
+const CREATOR_ID = "creator-1";
 
 // Simple match scoring based on overlapping interests
 function computeMatchScore(
@@ -20,27 +19,13 @@ function computeMatchScore(
   ];
   let hits = 0;
   for (const interest of brandInterests) {
-    if (creatorTerms.some((t) => t.includes(interest) || interest.includes(t))) {
+    if (creatorTerms.some((t) => t.includes(interest.toLowerCase()) || interest.toLowerCase().includes(t))) {
       hits++;
     }
   }
-  const base = Math.round((hits / brandInterests.length) * 100);
+  const base = Math.round((hits / Math.max(brandInterests.length, 1)) * 100);
   return Math.min(98, Math.max(45, base + 40));
 }
-
-const brandMatches = brandsData
-  .map((brand) => ({
-    brand,
-    matchScore: computeMatchScore(
-      brand.targetAudience.interests,
-      creator.categories,
-      creator.nicheTags,
-    ),
-  }))
-  .sort((a, b) => b.matchScore - a.matchScore);
-
-const topMatch = brandMatches[0];
-const suggestedMatches = brandMatches.slice(1, 4);
 
 // Determine greeting based on approximate time (server render default)
 function getGreeting(): string {
@@ -69,10 +54,39 @@ const audienceDemographics = {
   topLocation: { country: "United States", pct: 62 },
 };
 
-export default function CreatorDashboardPage() {
+export default async function CreatorDashboardPage() {
+  const [creator, allBrands, allBriefs, recentVideos] = await Promise.all([
+    getCreatorById(CREATOR_ID),
+    getBrands(),
+    getBriefs(),
+    getCreatorVideos(CREATOR_ID),
+  ]);
+
+  if (!creator) {
+    return <p className="p-8 text-gray-500">Creator not found.</p>;
+  }
+
+  const brandMatches = allBrands
+    .map((brand) => {
+      const brandBriefs = allBriefs.filter((b) => b.brand_id === brand.id && b.status === "active");
+      return {
+        brand,
+        briefs: brandBriefs,
+        matchScore: computeMatchScore(
+          brand.target_interests,
+          creator.categories,
+          creator.niche_tags,
+        ),
+      };
+    })
+    .sort((a, b) => b.matchScore - a.matchScore);
+
+  const topMatch = brandMatches[0];
+  const suggestedMatches = brandMatches.slice(1, 4);
+
   const greeting = getGreeting();
-  const topInterests = creator.audienceInterests.slice(0, 5);
-  const topVideos = creator.recentVideos.slice(0, 3);
+  const topInterests = creator.audience_interests.slice(0, 5);
+  const topVideos = recentVideos.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-surface-50 p-6 lg:p-8">
@@ -81,7 +95,7 @@ export default function CreatorDashboardPage() {
         {greeting}, {creator.name.split(" ")[0]}{" "}
       </h1>
 
-      {/* ────────── Row 1: Three cards ────────── */}
+      {/* Row 1: Three cards */}
       <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Brand Buddy Score */}
         <ScoreCard creator={creator} />
@@ -184,7 +198,7 @@ export default function CreatorDashboardPage() {
         </div>
       </div>
 
-      {/* ────────── Row 2: Brand Matches + Performance Trend ────────── */}
+      {/* Row 2: Brand Matches + Performance Trend */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Brand Matches — 2/3 width */}
         <div className="rounded-card bg-white p-6 shadow-card transition-shadow hover:shadow-card-hover lg:col-span-2">
@@ -198,16 +212,16 @@ export default function CreatorDashboardPage() {
           </div>
 
           {/* Featured brand */}
-          {topMatch && (
+          {topMatch && topMatch.briefs[0] && (
             <div className="mb-6">
               <BrandMatchCard
                 name={topMatch.brand.name}
-                logo={topMatch.brand.logo}
-                category={topMatch.brand.category}
+                logo={topMatch.brand.logo ?? ""}
+                category={topMatch.brand.category ?? ""}
                 matchScore={topMatch.matchScore}
-                budget={topMatch.brand.activeBriefs[0].budget}
-                briefTitle={topMatch.brand.activeBriefs[0].title}
-                timeline={topMatch.brand.activeBriefs[0].timeline}
+                budget={{ min: topMatch.briefs[0].budget_min, max: topMatch.briefs[0].budget_max }}
+                briefTitle={topMatch.briefs[0].title}
+                timeline={topMatch.briefs[0].timeline ?? ""}
                 featured
               />
             </div>
@@ -218,16 +232,18 @@ export default function CreatorDashboardPage() {
             Suggested Opportunities
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {suggestedMatches.map(({ brand, matchScore }) => (
+            {suggestedMatches
+              .filter((m) => m.briefs[0])
+              .map(({ brand, briefs: brandBriefs, matchScore }) => (
               <BrandMatchCard
                 key={brand.id}
                 name={brand.name}
-                logo={brand.logo}
-                category={brand.category}
+                logo={brand.logo ?? ""}
+                category={brand.category ?? ""}
                 matchScore={matchScore}
-                budget={brand.activeBriefs[0].budget}
-                briefTitle={brand.activeBriefs[0].title}
-                timeline={brand.activeBriefs[0].timeline}
+                budget={{ min: brandBriefs[0].budget_min, max: brandBriefs[0].budget_max }}
+                briefTitle={brandBriefs[0].title}
+                timeline={brandBriefs[0].timeline ?? ""}
               />
             ))}
           </div>
@@ -243,12 +259,12 @@ export default function CreatorDashboardPage() {
           <div className="mb-4 rounded-xl bg-green-50 p-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl font-bold text-green-600">
-                {creator.performanceTrend.viewsTrend}
+                {creator.views_trend}
               </span>
               <span className="text-sm text-green-700">in views this quarter</span>
             </div>
             <p className="mt-1 text-xs text-green-600">
-              Engagement {creator.performanceTrend.engagementTrend}
+              Engagement {creator.engagement_trend}
             </p>
           </div>
 
@@ -281,7 +297,7 @@ export default function CreatorDashboardPage() {
                     <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
                       <span>{formatCount(video.views)} views</span>
                       <span>·</span>
-                      <span>{video.engagementRate}% eng</span>
+                      <span>{video.engagement_rate}% eng</span>
                     </div>
                   </div>
                 </div>
@@ -295,31 +311,31 @@ export default function CreatorDashboardPage() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   Score Card sub-component (server, uses client ScoreGauge)
+   Score Card sub-component
    ═══════════════════════════════════════════════════════ */
-function ScoreCard({ creator }: { creator: (typeof creatorsData)[0] }) {
+function ScoreCard({ creator }: { creator: CreatorProfile }) {
   return (
     <div className="flex flex-col items-center justify-between rounded-card bg-white p-6 shadow-card transition-shadow hover:shadow-card-hover">
-      <ScoreGauge score={creator.score.overall} />
+      <ScoreGauge score={creator.score_overall} />
 
       <p className="mt-3 text-center text-sm text-gray-600">
         Top{" "}
         <span className="font-semibold text-brand-primary">
-          {creator.nicheRanking.percentile}%
+          {creator.niche_percentile}%
         </span>{" "}
         of{" "}
-        <span className="font-semibold text-gray-800">{creator.nicheRanking.category}</span>{" "}
+        <span className="font-semibold text-gray-800">{creator.niche_category}</span>{" "}
         Creators
       </p>
-      <p className="mb-4 text-xs text-gray-400">{creator.nicheRanking.tier}</p>
+      <p className="mb-4 text-xs text-gray-400">{creator.niche_tier}</p>
 
       {/* Score breakdown mini */}
       <div className="mb-4 w-full space-y-1.5">
         {[
-          { label: "Topic Relevance", value: creator.score.topicRelevance },
-          { label: "Engagement", value: creator.score.engagementHealth },
-          { label: "Authenticity", value: creator.score.authenticity },
-          { label: "Consistency", value: creator.score.activityConsistency },
+          { label: "Topic Relevance", value: creator.score_topic_relevance },
+          { label: "Engagement", value: creator.score_engagement_health },
+          { label: "Authenticity", value: creator.score_authenticity },
+          { label: "Consistency", value: creator.score_activity_consistency },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-2 text-xs">
             <span className="w-24 text-gray-500">{item.label}</span>
