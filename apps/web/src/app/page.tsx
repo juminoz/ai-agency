@@ -378,7 +378,7 @@ export default function Home() {
               alt="BrandBuddy platform demo"
               width={560}
               height={400}
-              className="relative z-10 h-auto w-[340px] rounded-2xl shadow-2xl md:w-[480px] lg:w-[560px]"
+              className="relative z-10 h-auto w-[340px] md:w-[480px] lg:w-[560px]"
               priority
               unoptimized
             />

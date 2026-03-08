@@ -1,80 +1,39 @@
-import {
-  type LucideIcon,
-  BarChart3,
-  CheckCircle,
-  Handshake,
-  MessageSquare,
-  Send,
-} from "lucide-react";
+import { BarChart3, Handshake } from "lucide-react";
 import Link from "next/link";
 
-import { getBrandWithBriefs, getDeals } from "@/lib/data";
-
-// Use NovaTech (brand-1) as the logged-in brand
-const BRAND_ID = "brand-1";
-
-// Recent activity feed (static for now — could be derived from notifications later)
-const recentActivity: {
-  id: string;
-  icon: LucideIcon;
-  iconColor: string;
-  iconBg: string;
-  text: string;
-  time: string;
-}[] = [
-  {
-    id: "a1",
-    icon: Send,
-    iconColor: "text-brand-primary",
-    iconBg: "bg-brand-50",
-    text: "Deal request sent to Marcus Chen for Smart Speaker Launch",
-    time: "2 days ago",
-  },
-  {
-    id: "a2",
-    icon: MessageSquare,
-    iconColor: "text-blue-500",
-    iconBg: "bg-blue-50",
-    text: "Marcus Chen viewed your campaign brief",
-    time: "2 days ago",
-  },
-  {
-    id: "a3",
-    icon: CheckCircle,
-    iconColor: "text-green-500",
-    iconBg: "bg-green-50",
-    text: "Previous campaign with Maya Rodriguez completed — +32% vs projection",
-    time: "5 days ago",
-  },
-  {
-    id: "a4",
-    icon: BarChart3,
-    iconColor: "text-violet-500",
-    iconBg: "bg-violet-50",
-    text: "Home Automation Series brief published — awaiting creator matches",
-    time: "1 week ago",
-  },
-  {
-    id: "a5",
-    icon: Handshake,
-    iconColor: "text-accent-primary",
-    iconBg: "bg-accent-50",
-    text: "Deal with Marcus Chen completed for RTX 5080 review — delivered on time",
-    time: "3 weeks ago",
-  },
-];
+import { requireRole } from "@/lib/auth/session";
+import { getBrandByUserId, getBriefs, getDeals } from "@/lib/data";
 
 export default async function BrandDashboardPage() {
-  const [brandData, brandDeals] = await Promise.all([
-    getBrandWithBriefs(BRAND_ID),
-    getDeals({ brandId: BRAND_ID }),
-  ]);
+  const session = await requireRole("brand");
+  const brand = await getBrandByUserId(session.id);
 
-  if (!brandData) {
-    return <p className="p-8 text-gray-500">Brand not found.</p>;
+  // No brand profile yet — prompt to create one
+  if (!brand) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center">
+        <div className="rounded-card bg-white p-12 text-center shadow-card">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Welcome, {session.fullName || "Brand"}!
+          </h2>
+          <p className="mt-3 max-w-md text-sm text-gray-500">
+            Set up your brand profile to start finding creators and launching campaigns.
+          </p>
+          <a
+            href="/brand/settings"
+            className="mt-6 inline-flex items-center gap-2 rounded-button bg-brand-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-500"
+          >
+            Set Up Your Brand
+          </a>
+        </div>
+      </div>
+    );
   }
 
-  const { brand, briefs } = brandData;
+  const [briefs, brandDeals] = await Promise.all([
+    getBriefs(brand.id),
+    getDeals({ brandId: brand.id }),
+  ]);
 
   const totalBriefs = briefs.filter((b) => b.status === "active").length;
   const creatorsContacted = brandDeals.length;
@@ -106,7 +65,7 @@ export default async function BrandDashboardPage() {
     },
     {
       label: "Avg Match Score",
-      value: avgMatchScore.toString(),
+      value: avgMatchScore > 0 ? avgMatchScore.toString() : "—",
       icon: (
         <svg className="h-5 w-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -115,7 +74,7 @@ export default async function BrandDashboardPage() {
     },
     {
       label: "Budget Spent",
-      value: `$${budgetSpent.toLocaleString()}`,
+      value: budgetSpent > 0 ? `$${budgetSpent.toLocaleString()}` : "$0",
       icon: (
         <svg className="h-5 w-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -126,7 +85,6 @@ export default async function BrandDashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Greeting */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800">
           Welcome back, {brand.name}
@@ -136,7 +94,6 @@ export default async function BrandDashboardPage() {
         </p>
       </div>
 
-      {/* Stats row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (
           <div
@@ -154,104 +111,103 @@ export default async function BrandDashboardPage() {
         ))}
       </div>
 
-      {/* Active Briefs + Recent Activity */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Active Briefs */}
         <div className="lg:col-span-2">
           <h2 className="mb-4 text-lg font-semibold text-gray-800">
             Active Briefs
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {briefs.filter((b) => b.status === "active").map((brief) => {
-              const matchedCreators = brandDeals.filter(
-                (d) => d.brief_title === brief.title
-              ).length;
+          {briefs.filter((b) => b.status === "active").length === 0 ? (
+            <div className="rounded-card bg-white p-8 text-center shadow-card">
+              <p className="text-sm text-gray-400">No active briefs yet</p>
+              <Link
+                href="/brand/campaigns"
+                className="mt-4 inline-flex rounded-button bg-brand-primary px-4 py-2 text-sm font-medium text-white hover:bg-brand-500"
+              >
+                Create a Campaign
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {briefs.filter((b) => b.status === "active").map((brief) => {
+                const matchedCreators = brandDeals.filter(
+                  (d) => d.brief_title === brief.title,
+                ).length;
 
-              return (
-                <div
-                  key={brief.id}
-                  className="rounded-card bg-white p-5 shadow-card transition-shadow hover:shadow-card-hover"
-                >
-                  <div className="flex items-start justify-between">
-                    <h3 className="text-sm font-semibold text-gray-800">
-                      {brief.title}
-                    </h3>
-                    <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
-                      Active
-                    </span>
-                  </div>
-                  <p className="mt-2 line-clamp-2 text-xs text-gray-500">
-                    {brief.description}
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-3 text-xs text-gray-600">
-                    <span className="flex items-center gap-1">
-                      <svg className="h-3.5 w-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V7m0 1v8m0 0v1" />
-                      </svg>
-                      ${brief.budget_min.toLocaleString()} - ${brief.budget_max.toLocaleString()}
-                    </span>
-                    <span className="flex items-center gap-1 capitalize">
-                      <svg className="h-3.5 w-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                      </svg>
-                      {brief.platform}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <svg className="h-3.5 w-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {matchedCreators} matched
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Recent Activity */}
-        <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-800">
-            Recent Activity
-          </h2>
-          <div className="rounded-card bg-white shadow-card">
-            <ul className="divide-y divide-surface-100">
-              {recentActivity.map((activity) => {
-                const Icon = activity.icon;
                 return (
-                <li key={activity.id} className="flex gap-3 px-4 py-3">
-                  <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${activity.iconBg}`}>
-                    <Icon className={`h-4 w-4 ${activity.iconColor}`} />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm text-gray-700">{activity.text}</p>
-                    <p className="mt-0.5 text-xs text-gray-400">
-                      {activity.time}
+                  <div
+                    key={brief.id}
+                    className="rounded-card bg-white p-5 shadow-card transition-shadow hover:shadow-card-hover"
+                  >
+                    <div className="flex items-start justify-between">
+                      <h3 className="text-sm font-semibold text-gray-800">
+                        {brief.title}
+                      </h3>
+                      <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                        Active
+                      </span>
+                    </div>
+                    <p className="mt-2 line-clamp-2 text-xs text-gray-500">
+                      {brief.description}
                     </p>
+                    <div className="mt-4 flex flex-wrap gap-3 text-xs text-gray-600">
+                      <span>
+                        ${brief.budget_min.toLocaleString()} - ${brief.budget_max.toLocaleString()}
+                      </span>
+                      <span className="capitalize">{brief.platform}</span>
+                      <span>{matchedCreators} matched</span>
+                    </div>
                   </div>
-                </li>
                 );
               })}
-            </ul>
+            </div>
+          )}
+        </div>
+
+        <div>
+          <h2 className="mb-4 text-lg font-semibold text-gray-800">
+            Quick Actions
+          </h2>
+          <div className="space-y-3">
+            <Link
+              href="/brand/search"
+              className="flex items-center gap-3 rounded-card bg-white p-4 shadow-card transition-shadow hover:shadow-card-hover"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50">
+                <svg className="h-5 w-5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Find Creators</p>
+                <p className="text-xs text-gray-500">Search for the perfect match</p>
+              </div>
+            </Link>
+            <Link
+              href="/brand/campaigns"
+              className="flex items-center gap-3 rounded-card bg-white p-4 shadow-card transition-shadow hover:shadow-card-hover"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-50">
+                <BarChart3 className="h-5 w-5 text-accent-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Manage Campaigns</p>
+                <p className="text-xs text-gray-500">View and manage your briefs</p>
+              </div>
+            </Link>
+            <Link
+              href="/brand/deals"
+              className="flex items-center gap-3 rounded-card bg-white p-4 shadow-card transition-shadow hover:shadow-card-hover"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50">
+                <Handshake className="h-5 w-5 text-purple-500" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">View Deals</p>
+                <p className="text-xs text-gray-500">Track your ongoing deals</p>
+              </div>
+            </Link>
           </div>
         </div>
-      </div>
-
-      {/* Quick Search card */}
-      <div className="rounded-card bg-white p-6 shadow-card">
-        <h2 className="text-lg font-semibold text-gray-800">Quick Search</h2>
-        <p className="mt-1 text-sm text-gray-500">
-          Find the perfect creators for your next campaign.
-        </p>
-        <Link
-          href="/brand/search"
-          className="mt-4 inline-flex items-center gap-2 rounded-button bg-brand-primary px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-500"
-        >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          Search Creators
-        </Link>
       </div>
     </div>
   );

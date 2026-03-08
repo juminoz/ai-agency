@@ -5,14 +5,20 @@ import { createAuthServerClient } from "@/lib/supabase/server";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
+  const next = searchParams.get("next");
 
   if (code) {
     const supabase = await createAuthServerClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
+      // Redirect to the requested path or infer from role
+      if (next) {
+        return NextResponse.redirect(`${origin}${next}`);
+      }
+      const role = data.user?.user_metadata?.role as string | undefined;
+      const dest = role === "brand" ? "/brand" : "/creator";
+      return NextResponse.redirect(`${origin}${dest}`);
     }
   }
 

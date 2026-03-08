@@ -1,9 +1,8 @@
 import { Clock, Megaphone, Plus, Users } from "lucide-react";
 import Link from "next/link";
 
-import { getBrandWithBriefs, getDeals } from "@/lib/data";
-
-const BRAND_ID = "brand-1";
+import { requireRole } from "@/lib/auth/session";
+import { getBrandByUserId, getBriefs, getDeals } from "@/lib/data";
 
 function formatBudget(min: number, max: number): string {
   const fmt = (n: number) =>
@@ -12,16 +11,27 @@ function formatBudget(min: number, max: number): string {
 }
 
 export default async function BrandCampaignsPage() {
-  const [brandData, brandDeals] = await Promise.all([
-    getBrandWithBriefs(BRAND_ID),
-    getDeals({ brandId: BRAND_ID }),
-  ]);
+  const session = await requireRole("brand");
+  const brand = await getBrandByUserId(session.id);
 
-  if (!brandData) {
-    return <p className="p-8 text-gray-500">Brand not found.</p>;
+  if (!brand) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12">
+        <p className="text-sm text-gray-500">
+          Please{" "}
+          <a href="/brand/settings" className="text-brand-primary underline">
+            set up your brand
+          </a>{" "}
+          first.
+        </p>
+      </div>
+    );
   }
 
-  const { briefs } = brandData;
+  const [briefs, brandDeals] = await Promise.all([
+    getBriefs(brand.id),
+    getDeals({ brandId: brand.id }),
+  ]);
 
   const activeBriefs = briefs.filter((b) => b.status === "active");
   const draftBriefs = briefs.filter((b) => b.status === "draft");
@@ -37,7 +47,6 @@ export default async function BrandCampaignsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-gray-800">Campaigns</h2>
@@ -51,7 +60,6 @@ export default async function BrandCampaignsPage() {
         </button>
       </div>
 
-      {/* Sections */}
       {sections.map((section) => (
         <div key={section.title}>
           <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400">
@@ -116,16 +124,6 @@ export default async function BrandCampaignsPage() {
                           <Users className="h-3 w-3 text-gray-400" />
                           {matchedCreators} creator{matchedCreators !== 1 ? "s" : ""}
                         </span>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {brief.content_formats.map((fmt) => (
-                          <span
-                            key={fmt}
-                            className="rounded-full bg-surface-100 px-2 py-0.5 text-xs text-gray-500"
-                          >
-                            {fmt}
-                          </span>
-                        ))}
                       </div>
                     </div>
 

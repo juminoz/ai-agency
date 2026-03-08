@@ -23,7 +23,9 @@ export async function middleware(request: NextRequest) {
   if (PUBLIC_ROUTES.includes(pathname)) {
     // Redirect logged-in users away from login/signup
     if (user && AUTH_ROUTES.includes(pathname)) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      const subtype = user.user_metadata?.role as string | undefined;
+      const dest = subtype === "brand" ? "/brand" : "/creator";
+      return NextResponse.redirect(new URL(dest, request.url));
     }
     return response;
   }
@@ -63,10 +65,6 @@ export async function middleware(request: NextRequest) {
   }
 
   // /creator/* and /brand/* — any authenticated user is allowed
-  // (already passed the auth check above)
-  // Role-specific access control will be added later.
-
-  // /dashboard/* — any authenticated user is allowed
   // (already passed the auth check above)
 
   return response;

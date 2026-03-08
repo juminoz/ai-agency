@@ -27,7 +27,7 @@ export default function UnauthorizedPage() {
         <div className="flex justify-center gap-3">
           <Link
             className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-            href="/dashboard"
+            href="/"
           >
             Go to Dashboard
           </Link>

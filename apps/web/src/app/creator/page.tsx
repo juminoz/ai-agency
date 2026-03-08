@@ -1,13 +1,11 @@
-import { Flame, MapPin, Play } from "lucide-react";
+import { Flame, Play } from "lucide-react";
 
 import { BrandMatchCard } from "@/components/brand-match-card";
 import { ScoreGauge } from "@/components/score-gauge";
-import { getBrands, getBriefs, getCreatorById, getCreatorVideos } from "@/lib/data";
+import { requireRole } from "@/lib/auth/session";
+import { getBrands, getBriefs, getCreatorByUserId, getCreatorVideos } from "@/lib/data";
 import { type CreatorProfile } from "@/lib/supabase/types";
 
-const CREATOR_ID = "creator-1";
-
-// Simple match scoring based on overlapping interests
 function computeMatchScore(
   brandInterests: string[],
   creatorCategories: string[],
@@ -27,7 +25,6 @@ function computeMatchScore(
   return Math.min(98, Math.max(45, base + 40));
 }
 
-// Determine greeting based on approximate time (server render default)
 function getGreeting(): string {
   const hour = new Date().getHours();
   if (hour < 12) return "Good morning";
@@ -35,36 +32,43 @@ function getGreeting(): string {
   return "Good evening";
 }
 
-// Format subscriber count
 function formatCount(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
   return n.toString();
 }
 
-// Mock audience demographics
-const audienceDemographics = {
-  gender: { male: 42, female: 54, other: 4 },
-  ageRanges: [
-    { range: "18-24", pct: 34 },
-    { range: "25-34", pct: 41 },
-    { range: "35-44", pct: 16 },
-    { range: "45+", pct: 9 },
-  ],
-  topLocation: { country: "United States", pct: 62 },
-};
-
 export default async function CreatorDashboardPage() {
-  const [creator, allBrands, allBriefs, recentVideos] = await Promise.all([
-    getCreatorById(CREATOR_ID),
+  const session = await requireRole("creator");
+  const creator = await getCreatorByUserId(session.id);
+
+  // No profile yet — prompt to create one
+  if (!creator) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center">
+        <div className="rounded-card bg-white p-12 text-center shadow-card">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Welcome, {session.fullName || "Creator"}!
+          </h2>
+          <p className="mt-3 max-w-md text-sm text-gray-500">
+            Set up your creator profile so brands can discover you and send deal requests.
+          </p>
+          <a
+            className="mt-6 inline-flex items-center gap-2 rounded-button bg-brand-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-500"
+            href="/creator/profile"
+          >
+            Create Your Profile
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  const [allBrands, allBriefs, recentVideos] = await Promise.all([
     getBrands(),
     getBriefs(),
-    getCreatorVideos(CREATOR_ID),
+    getCreatorVideos(creator.id),
   ]);
-
-  if (!creator) {
-    return <p className="p-8 text-gray-500">Creator not found.</p>;
-  }
 
   const brandMatches = allBrands
     .map((brand) => {
@@ -83,21 +87,17 @@ export default async function CreatorDashboardPage() {
 
   const topMatch = brandMatches[0];
   const suggestedMatches = brandMatches.slice(1, 4);
-
   const greeting = getGreeting();
-  const topInterests = creator.audience_interests.slice(0, 5);
+  const topInterests = (creator.audience_interests ?? []).slice(0, 5);
   const topVideos = recentVideos.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-surface-50 p-6 lg:p-8">
-      {/* Greeting */}
       <h1 className="mb-6 text-2xl font-bold text-gray-800">
         {greeting}, {creator.name.split(" ")[0]}{" "}
       </h1>
 
-      {/* Row 1: Three cards */}
       <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Brand Buddy Score */}
         <ScoreCard creator={creator} />
 
         {/* Audience Snapshot */}
@@ -105,231 +105,208 @@ export default async function CreatorDashboardPage() {
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400">
             Audience Snapshot
           </h3>
-          <div className="space-y-3">
-            {topInterests.map((interest) => (
-              <div key={interest.category}>
-                <div className="mb-1 flex items-center justify-between text-sm">
-                  <span className="text-gray-700">{interest.category}</span>
-                  <span className="font-medium text-gray-800">
-                    {Math.round(interest.confidence * 100)}%
-                  </span>
-                </div>
-                <div className="h-2 overflow-hidden rounded-full bg-gray-100">
-                  <div
-                    className="h-full rounded-full bg-brand-primary"
-                    style={{
-                      width: `${Math.round(interest.confidence * 100)}%`,
-                      opacity: 0.6 + interest.confidence * 0.4,
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-          <button className="mt-5 w-full rounded-button border border-brand-primary px-4 py-2 text-sm font-medium text-brand-primary transition-colors hover:bg-brand-50">
-            View Full Report
-          </button>
-        </div>
-
-        {/* Audience Demographics */}
-        <div className="rounded-card bg-white p-6 shadow-card transition-shadow hover:shadow-card-hover">
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400">
-            Audience Demographics
-          </h3>
-
-          {/* Donut chart (SVG) */}
-          <div className="mb-4 flex items-center justify-center">
-            <GenderDonut
-              male={audienceDemographics.gender.male}
-              female={audienceDemographics.gender.female}
-              other={audienceDemographics.gender.other}
-            />
-          </div>
-
-          {/* Legend */}
-          <div className="mb-4 flex justify-center gap-4 text-xs text-gray-600">
-            <span className="flex items-center gap-1">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-brand-primary" />
-              Female {audienceDemographics.gender.female}%
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-accent-primary" />
-              Male {audienceDemographics.gender.male}%
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-gray-300" />
-              Other {audienceDemographics.gender.other}%
-            </span>
-          </div>
-
-          {/* Age ranges */}
-          <div className="mb-4 space-y-2">
-            <p className="text-xs font-semibold uppercase text-gray-400">Age Ranges</p>
-            {audienceDemographics.ageRanges.map((ar) => (
-              <div key={ar.range} className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">{ar.range}</span>
-                <div className="flex items-center gap-2">
-                  <div className="h-1.5 w-20 overflow-hidden rounded-full bg-gray-100">
+          {topInterests.length > 0 ? (
+            <div className="space-y-3">
+              {topInterests.map((interest) => (
+                <div key={interest.category}>
+                  <div className="mb-1 flex items-center justify-between text-sm">
+                    <span className="text-gray-700">{interest.category}</span>
+                    <span className="font-medium text-gray-800">
+                      {Math.round(interest.confidence * 100)}%
+                    </span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-gray-100">
                     <div
-                      className="h-full rounded-full bg-brand-300"
-                      style={{ width: `${ar.pct}%` }}
+                      className="h-full rounded-full bg-brand-primary"
+                      style={{
+                        width: `${Math.round(interest.confidence * 100)}%`,
+                        opacity: 0.6 + interest.confidence * 0.4,
+                      }}
                     />
                   </div>
-                  <span className="w-8 text-right text-xs font-medium text-gray-700">
-                    {ar.pct}%
-                  </span>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-400">No audience data yet</p>
+          )}
+        </div>
 
-          {/* Top location */}
-          <div className="flex items-center gap-2 rounded-xl bg-surface-50 p-3">
-            <MapPin className="h-5 w-5 text-brand-primary" />
-            <div className="text-sm">
-              <p className="font-medium text-gray-700">
-                {audienceDemographics.topLocation.country}
-              </p>
-              <p className="text-xs text-gray-500">
-                {audienceDemographics.topLocation.pct}% of audience
-              </p>
+        {/* Quick Stats */}
+        <div className="rounded-card bg-white p-6 shadow-card transition-shadow hover:shadow-card-hover">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400">
+            Channel Stats
+          </h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Subscribers</span>
+              <span className="text-sm font-bold text-gray-800">
+                {formatCount(creator.subscriber_count)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Videos</span>
+              <span className="text-sm font-bold text-gray-800">
+                {creator.video_count}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Completed Campaigns</span>
+              <span className="text-sm font-bold text-gray-800">
+                {creator.completed_campaigns}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Delivery Rate</span>
+              <span className="text-sm font-bold text-gray-800">
+                {creator.delivery_rate}%
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Row 2: Brand Matches + Performance Trend */}
+      {/* Brand Matches + Performance */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Brand Matches — 2/3 width */}
         <div className="rounded-card bg-white p-6 shadow-card transition-shadow hover:shadow-card-hover lg:col-span-2">
           <div className="mb-4 flex items-center gap-2">
             <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-400">
               Brand Matches For You
             </h3>
-            <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-bold uppercase text-red-500">
-              <Flame className="h-3 w-3" /> High Match
-            </span>
+            {topMatch && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-bold uppercase text-red-500">
+                <Flame className="h-3 w-3" /> High Match
+              </span>
+            )}
           </div>
 
-          {/* Featured brand */}
-          {topMatch && topMatch.briefs[0] && (
-            <div className="mb-6">
-              <BrandMatchCard
-                name={topMatch.brand.name}
-                logo={topMatch.brand.logo ?? ""}
-                category={topMatch.brand.category ?? ""}
-                matchScore={topMatch.matchScore}
-                budget={{ min: topMatch.briefs[0].budget_min, max: topMatch.briefs[0].budget_max }}
-                briefTitle={topMatch.briefs[0].title}
-                timeline={topMatch.briefs[0].timeline ?? ""}
-                featured
-              />
+          {brandMatches.length === 0 ? (
+            <p className="text-sm text-gray-400">
+              No brands on the platform yet. Check back soon!
+            </p>
+          ) : (
+            <>
+              {topMatch && topMatch.briefs[0] && (
+                <div className="mb-6">
+                  <BrandMatchCard
+                    featured
+                    briefTitle={topMatch.briefs[0].title}
+                    budget={{ min: topMatch.briefs[0].budget_min, max: topMatch.briefs[0].budget_max }}
+                    category={topMatch.brand.category ?? ""}
+                    logo={topMatch.brand.logo ?? ""}
+                    matchScore={topMatch.matchScore}
+                    name={topMatch.brand.name}
+                    timeline={topMatch.briefs[0].timeline ?? ""}
+                  />
+                </div>
+              )}
+
+              {suggestedMatches.filter((m) => m.briefs[0]).length > 0 && (
+                <>
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    Suggested Opportunities
+                  </p>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {suggestedMatches
+                      .filter((m) => m.briefs[0])
+                      .map(({ brand, briefs: brandBriefs, matchScore }) => (
+                        <BrandMatchCard
+                          key={brand.id}
+                          briefTitle={brandBriefs[0].title}
+                          budget={{ min: brandBriefs[0].budget_min, max: brandBriefs[0].budget_max }}
+                          category={brand.category ?? ""}
+                          logo={brand.logo ?? ""}
+                          matchScore={matchScore}
+                          name={brand.name}
+                          timeline={brandBriefs[0].timeline ?? ""}
+                        />
+                      ))}
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* Performance */}
+        <div className="rounded-card bg-white p-6 shadow-card transition-shadow hover:shadow-card-hover">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400">
+            Performance
+          </h3>
+
+          {creator.views_trend && (
+            <div className="mb-4 rounded-xl bg-green-50 p-4">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-green-600">
+                  {creator.views_trend}
+                </span>
+                <span className="text-sm text-green-700">in views</span>
+              </div>
+              {creator.engagement_trend && (
+                <p className="mt-1 text-xs text-green-600">
+                  Engagement {creator.engagement_trend}
+                </p>
+              )}
             </div>
           )}
 
-          {/* Suggested Opportunities */}
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
-            Suggested Opportunities
-          </p>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {suggestedMatches
-              .filter((m) => m.briefs[0])
-              .map(({ brand, briefs: brandBriefs, matchScore }) => (
-              <BrandMatchCard
-                key={brand.id}
-                name={brand.name}
-                logo={brand.logo ?? ""}
-                category={brand.category ?? ""}
-                matchScore={matchScore}
-                budget={{ min: brandBriefs[0].budget_min, max: brandBriefs[0].budget_max }}
-                briefTitle={brandBriefs[0].title}
-                timeline={brandBriefs[0].timeline ?? ""}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Performance Trend — 1/3 width */}
-        <div className="rounded-card bg-white p-6 shadow-card transition-shadow hover:shadow-card-hover">
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400">
-            Performance Trend
-          </h3>
-
-          {/* Views callout */}
-          <div className="mb-4 rounded-xl bg-green-50 p-4">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-green-600">
-                {creator.views_trend}
-              </span>
-              <span className="text-sm text-green-700">in views this quarter</span>
-            </div>
-            <p className="mt-1 text-xs text-green-600">
-              Engagement {creator.engagement_trend}
-            </p>
-          </div>
-
-          {/* Most engaging content type */}
-          <div className="mb-4">
-            <p className="mb-1 text-xs font-semibold uppercase text-gray-400">
-              Most Engaging Format
-            </p>
-            <p className="text-sm font-medium text-gray-700">Destination Guides</p>
-            <p className="text-xs text-gray-500">Optimal length: 12-18 minutes</p>
-          </div>
-
-          {/* Top recent videos */}
-          <div>
-            <p className="mb-3 text-xs font-semibold uppercase text-gray-400">Top Recent Videos</p>
-            <div className="space-y-3">
-              {topVideos.map((video) => (
-                <div
-                  key={video.id}
-                  className="flex items-start gap-3 rounded-xl bg-surface-50 p-3 transition-colors hover:bg-surface-100"
-                >
-                  {/* Thumbnail placeholder */}
-                  <div className="flex h-14 w-20 shrink-0 items-center justify-center rounded-lg bg-brand-100">
-                    <Play className="h-4 w-4 text-brand-primary" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="line-clamp-2 text-xs font-medium text-gray-700">
-                      {video.title}
-                    </p>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
-                      <span>{formatCount(video.views)} views</span>
-                      <span>·</span>
-                      <span>{video.engagement_rate}% eng</span>
+          {topVideos.length > 0 && (
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase text-gray-400">Top Recent Videos</p>
+              <div className="space-y-3">
+                {topVideos.map((video) => (
+                  <div
+                    key={video.id}
+                    className="flex items-start gap-3 rounded-xl bg-surface-50 p-3 transition-colors hover:bg-surface-100"
+                  >
+                    <div className="flex h-14 w-20 shrink-0 items-center justify-center rounded-lg bg-brand-100">
+                      <Play className="h-4 w-4 text-brand-primary" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="line-clamp-2 text-xs font-medium text-gray-700">
+                        {video.title}
+                      </p>
+                      <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
+                        <span>{formatCount(video.views)} views</span>
+                        <span>·</span>
+                        <span>{video.engagement_rate}% eng</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {!creator.views_trend && topVideos.length === 0 && (
+            <p className="text-sm text-gray-400">No performance data yet</p>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-/* ═══════════════════════════════════════════════════════
-   Score Card sub-component
-   ═══════════════════════════════════════════════════════ */
 function ScoreCard({ creator }: { creator: CreatorProfile }) {
   return (
     <div className="flex flex-col items-center justify-between rounded-card bg-white p-6 shadow-card transition-shadow hover:shadow-card-hover">
       <ScoreGauge score={creator.score_overall} />
 
-      <p className="mt-3 text-center text-sm text-gray-600">
-        Top{" "}
-        <span className="font-semibold text-brand-primary">
-          {creator.niche_percentile}%
-        </span>{" "}
-        of{" "}
-        <span className="font-semibold text-gray-800">{creator.niche_category}</span>{" "}
-        Creators
-      </p>
-      <p className="mb-4 text-xs text-gray-400">{creator.niche_tier}</p>
+      {creator.niche_percentile > 0 && (
+        <p className="mt-3 text-center text-sm text-gray-600">
+          Top{" "}
+          <span className="font-semibold text-brand-primary">
+            {creator.niche_percentile}%
+          </span>{" "}
+          of{" "}
+          <span className="font-semibold text-gray-800">{creator.niche_category}</span>{" "}
+          Creators
+        </p>
+      )}
+      {creator.niche_tier && (
+        <p className="mb-4 text-xs text-gray-400">{creator.niche_tier}</p>
+      )}
 
-      {/* Score breakdown mini */}
       <div className="mb-4 w-full space-y-1.5">
         {[
           { label: "Topic Relevance", value: creator.score_topic_relevance },
@@ -350,73 +327,12 @@ function ScoreCard({ creator }: { creator: CreatorProfile }) {
         ))}
       </div>
 
-      <button className="w-full rounded-button bg-brand-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-500">
-        Share My Profile
-      </button>
+      <a
+        className="w-full rounded-button bg-brand-primary px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-brand-500"
+        href="/creator/profile"
+      >
+        Edit My Profile
+      </a>
     </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════
-   Gender Donut SVG (server-rendered)
-   ═══════════════════════════════════════════════════════ */
-function GenderDonut({
-  male,
-  female,
-  other,
-}: {
-  male: number;
-  female: number;
-  other: number;
-}) {
-  const size = 120;
-  const strokeWidth = 16;
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-
-  const femaleDash = (female / 100) * circumference;
-  const maleDash = (male / 100) * circumference;
-  const otherDash = (other / 100) * circumference;
-
-  const femaleOffset = 0;
-  const maleOffset = -(femaleDash);
-  const otherOffset = -(femaleDash + maleDash);
-
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="rotate-[-90deg]">
-      {/* Female */}
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        fill="none"
-        stroke="#4AADE5"
-        strokeWidth={strokeWidth}
-        strokeDasharray={`${femaleDash} ${circumference - femaleDash}`}
-        strokeDashoffset={femaleOffset}
-      />
-      {/* Male */}
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        fill="none"
-        stroke="#F5A623"
-        strokeWidth={strokeWidth}
-        strokeDasharray={`${maleDash} ${circumference - maleDash}`}
-        strokeDashoffset={maleOffset}
-      />
-      {/* Other */}
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        fill="none"
-        stroke="#D1D5DB"
-        strokeWidth={strokeWidth}
-        strokeDasharray={`${otherDash} ${circumference - otherDash}`}
-        strokeDashoffset={otherOffset}
-      />
-    </svg>
   );
 }

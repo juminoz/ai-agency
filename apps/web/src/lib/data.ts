@@ -1,10 +1,7 @@
 /**
  * Data access layer for BrandBuddy.
  *
- * Tries Supabase first; falls back to local JSON mock data.
- * This lets the app work in both modes:
- *   - With Supabase tables populated (production / post-migration)
- *   - Without tables (dev / pre-migration)
+ * All data comes from Supabase. No mock fallbacks.
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -19,14 +16,16 @@ import type {
   Notification,
 } from "@/lib/supabase/types";
 
-// ── Lazy Supabase client (service-role, server-side only) ─────────────────
+// ── Supabase client (service-role, server-side only) ─────────────────────
+
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return null;
+  if (!url || !key) throw new Error("Missing Supabase env vars");
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
+<<<<<<< Updated upstream
 // ── Mock data imports (static JSON, always available) ─────────────────────
 import mockBrandsJson from "@/data/mock/brands.json";
 import mockCreatorsJson from "@/data/mock/creators.json";
@@ -387,76 +386,154 @@ export function creatorProfileToView(
 }
 
 // ── Public data access functions ──────────────────────────────────────────
+=======
+// ── Creator Profiles ─────────────────────────────────────────────────────
+>>>>>>> Stashed changes
 
 export async function getCreators(): Promise<CreatorProfile[]> {
   const sb = getSupabase();
-  if (sb) {
-    const { data, error } = await sb
-      .from("creator_profiles")
-      .select("*")
-      .order("score_overall", { ascending: false });
-    if (!error && data && data.length > 0) return data;
-  }
-  return mockCreatorsJson.map(mockCreatorToRow);
+  const { data, error } = await sb
+    .from("creator_profiles")
+    .select("*")
+    .order("score_overall", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
 }
 
 export async function getCreatorById(
   id: string
 ): Promise<CreatorProfile | null> {
   const sb = getSupabase();
-  if (sb) {
+  const { data, error } = await sb
+    .from("creator_profiles")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) return null;
+  return data;
+}
+
+export async function getCreatorByUserId(userId: string): Promise<CreatorProfile | null> {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("creator_profiles")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+  if (error) return null;
+  return data;
+}
+
+/**
+ * Create or update a creator profile. Uses user_id as the identity key.
+ */
+export async function upsertCreatorProfile(
+  profile: Partial<CreatorProfile> & { user_id: string },
+): Promise<CreatorProfile> {
+  const sb = getSupabase();
+
+  // Check if exists
+  const existing = await getCreatorByUserId(profile.user_id);
+
+  if (existing) {
     const { data, error } = await sb
       .from("creator_profiles")
-      .select("*")
-      .eq("id", id)
+      .update(profile)
+      .eq("id", existing.id)
+      .select()
       .single();
-    if (!error && data) return data;
+    if (error) throw error;
+    return data;
+  } else {
+    const { data, error } = await sb
+      .from("creator_profiles")
+      .insert(profile)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
   }
-  const mock = mockCreatorsJson.find((c) => c.id === id);
-  return mock ? mockCreatorToRow(mock) : null;
 }
 
 export async function getCreatorVideos(
   creatorId: string
 ): Promise<CreatorVideo[]> {
   const sb = getSupabase();
-  if (sb) {
-    const { data, error } = await sb
-      .from("creator_videos")
-      .select("*")
-      .eq("creator_id", creatorId)
-      .order("published_at", { ascending: false });
-    if (!error && data && data.length > 0) return data;
-  }
-  const mock = mockCreatorsJson.find((c) => c.id === creatorId);
-  return mock ? mockCreatorVideos(mock) : [];
+  const { data, error } = await sb
+    .from("creator_videos")
+    .select("*")
+    .eq("creator_id", creatorId)
+    .order("published_at", { ascending: false });
+  if (error) return [];
+  return data ?? [];
 }
+
+// ── Brands ───────────────────────────────────────────────────────────────
 
 export async function getBrands(): Promise<Brand[]> {
   const sb = getSupabase();
-  if (sb) {
-    const { data, error } = await sb.from("brands").select("*");
-    if (!error && data && data.length > 0) return data;
-  }
-  return mockBrandsJson.map(mockBrandToRow);
+  const { data, error } = await sb.from("brands").select("*");
+  if (error) throw error;
+  return data ?? [];
 }
 
 export async function getBrandById(id: string): Promise<Brand | null> {
   const sb = getSupabase();
-  if (sb) {
+  const { data, error } = await sb
+    .from("brands")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) return null;
+  return data;
+}
+
+export async function getBrandByUserId(userId: string): Promise<Brand | null> {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("brands")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+  if (error) return null;
+  return data;
+}
+
+/**
+ * Create or update a brand. Uses user_id as the identity key.
+ */
+export async function upsertBrand(
+  brand: Partial<Brand> & { user_id: string },
+): Promise<Brand> {
+  const sb = getSupabase();
+
+  const existing = await getBrandByUserId(brand.user_id);
+
+  if (existing) {
     const { data, error } = await sb
       .from("brands")
-      .select("*")
-      .eq("id", id)
+      .update(brand)
+      .eq("id", existing.id)
+      .select()
       .single();
-    if (!error && data) return data;
+    if (error) throw error;
+    return data;
+  } else {
+    const { data, error } = await sb
+      .from("brands")
+      .insert(brand)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
   }
-  const mock = mockBrandsJson.find((b) => b.id === id);
-  return mock ? mockBrandToRow(mock) : null;
 }
+
+// ── Briefs ───────────────────────────────────────────────────────────────
 
 export async function getBriefs(brandId?: string): Promise<Brief[]> {
   const sb = getSupabase();
+<<<<<<< Updated upstream
   if (sb) {
     let query = sb.from("briefs").select("*");
     if (brandId) query = query.eq("brand_id", brandId);
@@ -473,11 +550,23 @@ export async function getBriefs(brandId?: string): Promise<Brief[]> {
   );
 }
 
+=======
+  let query = sb.from("briefs").select("*");
+  if (brandId) query = query.eq("brand_id", brandId);
+  const { data, error } = await query.order("created_at", { ascending: false });
+  if (error) return [];
+  return data ?? [];
+}
+
+// ── Deals ────────────────────────────────────────────────────────────────
+
+>>>>>>> Stashed changes
 export async function getDeals(opts?: {
   brandId?: string;
   creatorId?: string;
 }): Promise<Deal[]> {
   const sb = getSupabase();
+<<<<<<< Updated upstream
   if (sb) {
     let query = sb.from("deals").select("*");
     if (opts?.brandId) query = query.eq("brand_id", opts.brandId);
@@ -493,41 +582,141 @@ export async function getDeals(opts?: {
   if (opts?.creatorId)
     filtered = filtered.filter((d) => d.creatorId === opts.creatorId);
   return filtered.map(mockDealToRow);
+=======
+  let query = sb.from("deals").select("*");
+  if (opts?.brandId) query = query.eq("brand_id", opts.brandId);
+  if (opts?.creatorId) query = query.eq("creator_id", opts.creatorId);
+  const { data, error } = await query.order("created_at", { ascending: false });
+  if (error) return [];
+  return data ?? [];
+>>>>>>> Stashed changes
 }
 
 export async function getDealById(id: string): Promise<Deal | null> {
   const sb = getSupabase();
-  if (sb) {
-    const { data, error } = await sb
-      .from("deals")
-      .select("*")
-      .eq("id", id)
-      .single();
-    if (!error && data) return data;
-  }
-  const mock = (mockDealsJson as MockDeal[]).find((d) => d.id === id);
-  return mock ? mockDealToRow(mock) : null;
+  const { data, error } = await sb
+    .from("deals")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) return null;
+  return data;
 }
 
 export async function getDealMessages(dealId: string): Promise<DealMessage[]> {
   const sb = getSupabase();
-  if (sb) {
-    const { data, error } = await sb
-      .from("deal_messages")
-      .select("*")
-      .eq("deal_id", dealId)
-      .order("sent_at", { ascending: true });
-    if (!error && data && data.length > 0) return data;
-  }
-  const mock = (mockDealsJson as MockDeal[]).find((d) => d.id === dealId);
-  return mock ? mockDealMessages(mock) : [];
+  const { data, error } = await sb
+    .from("deal_messages")
+    .select("*")
+    .eq("deal_id", dealId)
+    .order("sent_at", { ascending: true });
+  if (error) return [];
+  return data ?? [];
 }
+
+export async function sendDealMessage(msg: {
+  deal_id: string;
+  sender_type: "brand" | "creator";
+  sender_name: string | null;
+  text: string;
+}): Promise<DealMessage> {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("deal_messages")
+    .insert(msg)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Find an existing deal between a brand and creator, or create one.
+ */
+export async function findOrCreateDeal(opts: {
+  brandId: string;
+  creatorId: string;
+  briefTitle?: string;
+}): Promise<Deal> {
+  const sb = getSupabase();
+
+  // Check for existing deal
+  const { data: existing } = await sb
+    .from("deals")
+    .select("*")
+    .eq("brand_id", opts.brandId)
+    .eq("creator_id", opts.creatorId)
+    .in("status", ["received", "negotiating", "agreed", "live"])
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (existing) return existing;
+
+  // Create a new deal
+  const { data, error } = await sb
+    .from("deals")
+    .insert({
+      brand_id: opts.brandId,
+      creator_id: opts.creatorId,
+      status: "received",
+      brief_title: opts.briefTitle ?? "Direct Message",
+      brief_budget_min: 0,
+      brief_budget_max: 0,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateDealStatus(
+  dealId: string,
+  status: Deal["status"],
+): Promise<Deal> {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("deals")
+    .update({ status })
+    .eq("id", dealId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getDealsWithNames(opts?: {
+  brandId?: string;
+  creatorId?: string;
+}): Promise<
+  (Deal & { brand_name: string; creator_name: string })[]
+> {
+  const sb = getSupabase();
+  let query = sb
+    .from("deals")
+    .select("*, brands!inner(name), creator_profiles!inner(name)");
+  if (opts?.brandId) query = query.eq("brand_id", opts.brandId);
+  if (opts?.creatorId) query = query.eq("creator_id", opts.creatorId);
+  const { data, error } = await query.order("created_at", { ascending: false });
+  if (error) return [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (data ?? []).map((row: any) => ({
+    ...row,
+    brand_name: row.brands?.name ?? "Unknown Brand",
+    creator_name: row.creator_profiles?.name ?? "Unknown Creator",
+    brands: undefined,
+    creator_profiles: undefined,
+  }));
+}
+
+// ── Notifications ────────────────────────────────────────────────────────
 
 export async function getNotifications(opts?: {
   recipientType?: string;
   recipientId?: string;
 }): Promise<Notification[]> {
   const sb = getSupabase();
+<<<<<<< Updated upstream
   if (sb) {
     let query = sb.from("notifications").select("*");
     if (opts?.recipientType)
@@ -544,11 +733,18 @@ export async function getNotifications(opts?: {
   if (opts?.recipientId)
     filtered = filtered.filter((n) => n.recipientId === opts.recipientId);
   return filtered.map(mockNotificationToRow);
+=======
+  let query = sb.from("notifications").select("*");
+  if (opts?.recipientType) query = query.eq("recipient_type", opts.recipientType);
+  if (opts?.recipientId) query = query.eq("recipient_id", opts.recipientId);
+  const { data, error } = await query.order("created_at", { ascending: false });
+  if (error) return [];
+  return data ?? [];
+>>>>>>> Stashed changes
 }
 
-/**
- * Get a brand with its briefs in one call.
- */
+// ── Composite helpers ────────────────────────────────────────────────────
+
 export async function getBrandWithBriefs(brandId: string): Promise<{
   brand: Brand;
   briefs: Brief[];
