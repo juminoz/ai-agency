@@ -44,7 +44,7 @@ export interface InterestCategory {
  */
 export async function analyzeComments(
   comments: Comment[],
-  brandContext?: string,
+  brandContext?: string
 ): Promise<CommentAnalysisResult> {
   if (comments.length === 0) {
     return {
@@ -57,7 +57,7 @@ export async function analyzeComments(
   }
 
   const genAI = getGeminiClient();
-  const model = genAI.getGenerativeModel({ model: "gemini-3.0-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
   const commentTexts = comments
     .slice(0, 100)

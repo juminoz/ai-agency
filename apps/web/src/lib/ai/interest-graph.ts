@@ -17,7 +17,12 @@ export interface InterestGraphResult {
 export interface InterestNode {
   category: string;
   confidence: number;
-  sources: ("video_titles" | "video_tags" | "video_descriptions" | "comments")[];
+  sources: (
+    | "video_titles"
+    | "video_tags"
+    | "video_descriptions"
+    | "comments"
+  )[];
   relatedCategories: string[];
 }
 
@@ -31,7 +36,7 @@ export interface InterestNode {
  */
 export async function buildInterestGraph(
   videos: Video[],
-  comments: Comment[],
+  comments: Comment[]
 ): Promise<InterestGraphResult> {
   if (videos.length === 0) {
     return {
@@ -42,7 +47,7 @@ export async function buildInterestGraph(
   }
 
   const genAI = getGeminiClient();
-  const model = genAI.getGenerativeModel({ model: "gemini-3.0-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
   // Prepare video metadata summary
   const videoSummary = videos
