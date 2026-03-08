@@ -186,7 +186,9 @@ export async function getCreatorById(
   return data;
 }
 
-export async function getCreatorByUserId(userId: string): Promise<CreatorProfile | null> {
+export async function getCreatorByUserId(
+  userId: string
+): Promise<CreatorProfile | null> {
   const sb = getSupabase();
   const { data, error } = await sb
     .from("creator_profiles")
@@ -201,7 +203,7 @@ export async function getCreatorByUserId(userId: string): Promise<CreatorProfile
  * Create or update a creator profile. Uses user_id as the identity key.
  */
 export async function upsertCreatorProfile(
-  profile: Partial<CreatorProfile> & { user_id: string },
+  profile: Partial<CreatorProfile> & { user_id: string }
 ): Promise<CreatorProfile> {
   const sb = getSupabase();
 
@@ -275,7 +277,7 @@ export async function getBrandByUserId(userId: string): Promise<Brand | null> {
  * Create or update a brand. Uses user_id as the identity key.
  */
 export async function upsertBrand(
-  brand: Partial<Brand> & { user_id: string },
+  brand: Partial<Brand> & { user_id: string }
 ): Promise<Brand> {
   const sb = getSupabase();
 
@@ -407,7 +409,7 @@ export async function findOrCreateDeal(opts: {
 
 export async function updateDealStatus(
   dealId: string,
-  status: Deal["status"],
+  status: Deal["status"]
 ): Promise<Deal> {
   const sb = getSupabase();
   const { data, error } = await sb
@@ -423,9 +425,7 @@ export async function updateDealStatus(
 export async function getDealsWithNames(opts?: {
   brandId?: string;
   creatorId?: string;
-}): Promise<
-  (Deal & { brand_name: string; creator_name: string })[]
-> {
+}): Promise<(Deal & { brand_name: string; creator_name: string })[]> {
   const sb = getSupabase();
   let query = sb
     .from("deals")
@@ -452,7 +452,8 @@ export async function getNotifications(opts?: {
 }): Promise<Notification[]> {
   const sb = getSupabase();
   let query = sb.from("notifications").select("*");
-  if (opts?.recipientType) query = query.eq("recipient_type", opts.recipientType);
+  if (opts?.recipientType)
+    query = query.eq("recipient_type", opts.recipientType);
   if (opts?.recipientId) query = query.eq("recipient_id", opts.recipientId);
   const { data, error } = await query.order("created_at", { ascending: false });
   if (error) return [];

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { CreatorDetail } from "./creator-detail";
 import { requireRole } from "@/lib/auth/session";
 import {
   getBrandByUserId,
@@ -8,8 +9,6 @@ import {
   getDealMessages,
   getDeals,
 } from "@/lib/data";
-
-import { CreatorDetail } from "./creator-detail";
 
 export default async function BrandCreatorDetailPage({
   params,
@@ -61,16 +60,22 @@ export default async function BrandCreatorDetailPage({
   const brand = await getBrandByUserId(session.id);
   const [videos, deals] = await Promise.all([
     getCreatorVideos(creator.id),
-    brand ? getDeals({ brandId: brand.id, creatorId: creator.id }) : Promise.resolve([]),
+    brand
+      ? getDeals({ brandId: brand.id, creatorId: creator.id })
+      : Promise.resolve([]),
   ]);
 
   // Get messages from existing deals with this creator
   let existingMessages: Awaited<ReturnType<typeof getDealMessages>> = [];
   if (deals.length > 0) {
-    const allMessages = await Promise.all(deals.map((d) => getDealMessages(d.id)));
-    existingMessages = allMessages.flat().sort(
-      (a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime(),
+    const allMessages = await Promise.all(
+      deals.map((d) => getDealMessages(d.id))
     );
+    existingMessages = allMessages
+      .flat()
+      .sort(
+        (a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime()
+      );
   }
 
   return (

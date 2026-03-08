@@ -3,18 +3,28 @@
 import Link from "next/link";
 import { useActionState, useRef, useState } from "react";
 
-import { ScoreGauge } from "@/components/score-gauge";
 
 import { startConversationAction } from "./actions";
 
-import type { CreatorProfile, CreatorVideo, DealMessage } from "@/lib/supabase/types";
+import type {
+  CreatorProfile,
+  CreatorVideo,
+  DealMessage,
+} from "@/lib/supabase/types";
 
+import { ScoreGauge } from "@/components/score-gauge";
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
-type SortKey = "title" | "published_at" | "views" | "likes" | "comments" | "engagement_rate";
+type SortKey =
+  | "title"
+  | "published_at"
+  | "views"
+  | "likes"
+  | "comments"
+  | "engagement_rate";
 type SortDir = "asc" | "desc";
 
 function formatNumber(n: number): string {
@@ -27,8 +37,21 @@ function formatNumber(n: number): string {
 /*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
-function ScoreBar({ label, score, weight }: { label: string; score: number; weight: string }) {
-  const color = score >= 75 ? "bg-emerald-500" : score >= 50 ? "bg-amber-400" : "bg-red-500";
+function ScoreBar({
+  label,
+  score,
+  weight,
+}: {
+  label: string;
+  score: number;
+  weight: string;
+}) {
+  const color =
+    score >= 75
+      ? "bg-emerald-500"
+      : score >= 50
+        ? "bg-amber-400"
+        : "bg-red-500";
   return (
     <div className="flex items-center gap-3">
       <div className="w-40 flex-shrink-0">
@@ -37,10 +60,15 @@ function ScoreBar({ label, score, weight }: { label: string; score: number; weig
       </div>
       <div className="flex-1">
         <div className="h-3 overflow-hidden rounded-full bg-gray-100">
-          <div className={`h-full rounded-full ${color}`} style={{ width: `${score}%` }} />
+          <div
+            className={`h-full rounded-full ${color}`}
+            style={{ width: `${score}%` }}
+          />
         </div>
       </div>
-      <span className="w-10 text-right text-sm font-semibold text-gray-800">{score}</span>
+      <span className="w-10 text-right text-sm font-semibold text-gray-800">
+        {score}
+      </span>
     </div>
   );
 }
@@ -53,7 +81,9 @@ function RiskBadge({ level }: { level: string }) {
     high: "bg-red-100 text-red-700",
   };
   return (
-    <span className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${colorMap[level] || "bg-gray-100 text-gray-600"}`}>
+    <span
+      className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${colorMap[level] || "bg-gray-100 text-gray-600"}`}
+    >
       {level}
     </span>
   );
@@ -93,7 +123,10 @@ function MessageComposer({
   const [showComposer, setShowComposer] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [state, formAction, isPending] = useActionState(startConversationAction, { sent: false });
+  const [state, formAction, isPending] = useActionState(
+    startConversationAction,
+    { sent: false }
+  );
 
   if (existingMessages.length > 0) {
     return (
@@ -120,7 +153,10 @@ function MessageComposer({
                 {msg.text}
               </div>
               <span className="mt-1 px-1 text-[11px] text-gray-400">
-                {new Date(msg.sent_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                {new Date(msg.sent_at).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}
               </span>
             </div>
           ))}
@@ -223,18 +259,22 @@ export function CreatorDetail({
   const [goal, setGoal] = useState("awareness");
   const [showProjection, setShowProjection] = useState(false);
 
-  const avgViews = videos.length > 0
-    ? Math.round(videos.reduce((sum, v) => sum + v.views, 0) / videos.length)
-    : 0;
-  const avgEngagement = videos.length > 0
-    ? videos.reduce((sum, v) => sum + v.engagement_rate, 0) / videos.length
-    : 0;
+  const avgViews =
+    videos.length > 0
+      ? Math.round(videos.reduce((sum, v) => sum + v.views, 0) / videos.length)
+      : 0;
+  const avgEngagement =
+    videos.length > 0
+      ? videos.reduce((sum, v) => sum + v.engagement_rate, 0) / videos.length
+      : 0;
 
   const sortedVideos = [...videos].sort((a, b) => {
     const aVal = a[sortKey];
     const bVal = b[sortKey];
     if (typeof aVal === "string" && typeof bVal === "string") {
-      return sortDir === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      return sortDir === "asc"
+        ? aVal.localeCompare(bVal)
+        : bVal.localeCompare(aVal);
     }
     return sortDir === "asc"
       ? (aVal as number) - (bVal as number)
@@ -294,26 +334,50 @@ export function CreatorDetail({
 
   // Projection calculations
   const minDeal = creator.minimum_deal_size || 1;
-  const projections: Record<string, { reach: string; engagements: string; conversions: string; cpe: string; roi: string }> = {
+  const projections: Record<
+    string,
+    {
+      reach: string;
+      engagements: string;
+      conversions: string;
+      cpe: string;
+      roi: string;
+    }
+  > = {
     awareness: {
       reach: `${formatNumber(Math.round(avgViews * (budget / minDeal) * 0.85))} - ${formatNumber(Math.round(avgViews * (budget / minDeal) * 1.15))}`,
-      engagements: formatNumber(Math.round(avgViews * (avgEngagement / 100) * (budget / minDeal))),
+      engagements: formatNumber(
+        Math.round(avgViews * (avgEngagement / 100) * (budget / minDeal))
+      ),
       conversions: `${formatNumber(Math.round(avgViews * 0.003 * (budget / minDeal)))} - ${formatNumber(Math.round(avgViews * 0.008 * (budget / minDeal)))}`,
-      cpe: avgEngagement > 0 ? `$${(budget / (avgViews * (avgEngagement / 100) * (budget / minDeal))).toFixed(2)}` : "N/A",
+      cpe:
+        avgEngagement > 0
+          ? `$${(budget / (avgViews * (avgEngagement / 100) * (budget / minDeal))).toFixed(2)}`
+          : "N/A",
       roi: "8.4",
     },
     consideration: {
       reach: `${formatNumber(Math.round(avgViews * (budget / minDeal) * 0.7))} - ${formatNumber(Math.round(avgViews * (budget / minDeal) * 1.0))}`,
-      engagements: formatNumber(Math.round(avgViews * (avgEngagement / 100) * (budget / minDeal) * 1.2)),
+      engagements: formatNumber(
+        Math.round(avgViews * (avgEngagement / 100) * (budget / minDeal) * 1.2)
+      ),
       conversions: `${formatNumber(Math.round(avgViews * 0.005 * (budget / minDeal)))} - ${formatNumber(Math.round(avgViews * 0.012 * (budget / minDeal)))}`,
-      cpe: avgEngagement > 0 ? `$${(budget / (avgViews * (avgEngagement / 100) * (budget / minDeal) * 1.2)).toFixed(2)}` : "N/A",
+      cpe:
+        avgEngagement > 0
+          ? `$${(budget / (avgViews * (avgEngagement / 100) * (budget / minDeal) * 1.2)).toFixed(2)}`
+          : "N/A",
       roi: "7.2",
     },
     conversion: {
       reach: `${formatNumber(Math.round(avgViews * (budget / minDeal) * 0.6))} - ${formatNumber(Math.round(avgViews * (budget / minDeal) * 0.85))}`,
-      engagements: formatNumber(Math.round(avgViews * (avgEngagement / 100) * (budget / minDeal) * 0.9)),
+      engagements: formatNumber(
+        Math.round(avgViews * (avgEngagement / 100) * (budget / minDeal) * 0.9)
+      ),
       conversions: `${formatNumber(Math.round(avgViews * 0.008 * (budget / minDeal)))} - ${formatNumber(Math.round(avgViews * 0.02 * (budget / minDeal)))}`,
-      cpe: avgEngagement > 0 ? `$${(budget / (avgViews * (avgEngagement / 100) * (budget / minDeal) * 0.9)).toFixed(2)}` : "N/A",
+      cpe:
+        avgEngagement > 0
+          ? `$${(budget / (avgViews * (avgEngagement / 100) * (budget / minDeal) * 0.9)).toFixed(2)}`
+          : "N/A",
       roi: "6.1",
     },
   };
@@ -325,8 +389,18 @@ export function CreatorDetail({
         className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800"
         href="/brand/search"
       >
-        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path d="M15 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+        <svg
+          className="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M15 19l-7-7 7-7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+          />
         </svg>
         Back to Search
       </Link>
@@ -336,11 +410,16 @@ export function CreatorDetail({
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
             <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-300 to-brand-primary text-xl font-bold text-white">
-              {creator.name.split(" ").map((n) => n[0]).join("")}
+              {creator.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold text-gray-800">{creator.name}</h1>
+                <h1 className="text-xl font-bold text-gray-800">
+                  {creator.name}
+                </h1>
                 {platformBadge}
               </div>
               <p className="text-sm text-gray-500">@{creator.handle}</p>
@@ -361,7 +440,8 @@ export function CreatorDetail({
             <div className="text-center">
               <ScoreGauge score={creator.score_overall} size={100} />
               <p className="mt-1 text-xs font-medium text-gray-500">
-                Top {creator.niche_percentile}% in {creator.niche_category ?? "their niche"}
+                Top {creator.niche_percentile}% in{" "}
+                {creator.niche_category ?? "their niche"}
               </p>
             </div>
 
@@ -396,12 +476,36 @@ export function CreatorDetail({
             Score Breakdown
           </h2>
           <div className="space-y-3">
-            <ScoreBar label="Topic Relevance" score={creator.score_topic_relevance} weight="25% weight" />
-            <ScoreBar label="Recent Views" score={creator.score_recent_views} weight="20% weight" />
-            <ScoreBar label="Engagement Health" score={creator.score_engagement_health} weight="18% weight" />
-            <ScoreBar label="Authenticity" score={creator.score_authenticity} weight="15% weight" />
-            <ScoreBar label="Activity / Consistency" score={creator.score_activity_consistency} weight="12% weight" />
-            <ScoreBar label="Comment-Audience Match" score={creator.score_comment_audience_match} weight="10% weight" />
+            <ScoreBar
+              label="Topic Relevance"
+              score={creator.score_topic_relevance}
+              weight="25% weight"
+            />
+            <ScoreBar
+              label="Recent Views"
+              score={creator.score_recent_views}
+              weight="20% weight"
+            />
+            <ScoreBar
+              label="Engagement Health"
+              score={creator.score_engagement_health}
+              weight="18% weight"
+            />
+            <ScoreBar
+              label="Authenticity"
+              score={creator.score_authenticity}
+              weight="15% weight"
+            />
+            <ScoreBar
+              label="Activity / Consistency"
+              score={creator.score_activity_consistency}
+              weight="12% weight"
+            />
+            <ScoreBar
+              label="Comment-Audience Match"
+              score={creator.score_comment_audience_match}
+              weight="10% weight"
+            />
           </div>
         </div>
 
@@ -411,8 +515,12 @@ export function CreatorDetail({
           </h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Overall Authenticity</span>
-              <span className="text-2xl font-bold text-gray-800">{creator.authenticity_score}</span>
+              <span className="text-sm text-gray-600">
+                Overall Authenticity
+              </span>
+              <span className="text-2xl font-bold text-gray-800">
+                {creator.authenticity_score}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Fake Follower Risk</span>
@@ -439,11 +547,15 @@ export function CreatorDetail({
                     style={{ width: `${creator.comment_quality}%` }}
                   />
                 </div>
-                <span className="text-sm font-semibold text-gray-800">{creator.comment_quality}</span>
+                <span className="text-sm font-semibold text-gray-800">
+                  {creator.comment_quality}
+                </span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Like-to-View Normality</span>
+              <span className="text-sm text-gray-600">
+                Like-to-View Normality
+              </span>
               <div className="flex items-center gap-2">
                 <div className="h-2 w-24 overflow-hidden rounded-full bg-gray-100">
                   <div
@@ -451,7 +563,9 @@ export function CreatorDetail({
                     style={{ width: `${creator.like_to_view_normality}%` }}
                   />
                 </div>
-                <span className="text-sm font-semibold text-gray-800">{creator.like_to_view_normality}</span>
+                <span className="text-sm font-semibold text-gray-800">
+                  {creator.like_to_view_normality}
+                </span>
               </div>
             </div>
           </div>
@@ -464,11 +578,17 @@ export function CreatorDetail({
           <h2 className="mb-4 border-b border-surface-100 pb-3 text-lg font-semibold text-gray-800">
             Audience Interest Map
           </h2>
-          {creator.audience_interests && creator.audience_interests.length > 0 ? (
+          {creator.audience_interests &&
+          creator.audience_interests.length > 0 ? (
             <div className="space-y-3">
               {creator.audience_interests.map((interest) => (
-                <div key={interest.category} className="flex items-center gap-3">
-                  <span className="w-36 flex-shrink-0 text-sm text-gray-700">{interest.category}</span>
+                <div
+                  key={interest.category}
+                  className="flex items-center gap-3"
+                >
+                  <span className="w-36 flex-shrink-0 text-sm text-gray-700">
+                    {interest.category}
+                  </span>
                   <div className="flex-1">
                     <div className="h-3 overflow-hidden rounded-full bg-gray-100">
                       <div
@@ -484,12 +604,17 @@ export function CreatorDetail({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-400">No audience interest data available yet.</p>
+            <p className="text-sm text-gray-400">
+              No audience interest data available yet.
+            </p>
           )}
         </div>
 
         {/* Message Composer */}
-        <MessageComposer creatorId={creator.id} existingMessages={existingMessages} />
+        <MessageComposer
+          creatorId={creator.id}
+          existingMessages={existingMessages}
+        />
       </div>
 
       {/* ===== ROW 3: Performance ===== */}
@@ -499,24 +624,34 @@ export function CreatorDetail({
             Performance Trend
           </h2>
           {creator.trend_narrative && (
-            <p className="mb-4 text-sm leading-relaxed text-gray-700">{creator.trend_narrative}</p>
+            <p className="mb-4 text-sm leading-relaxed text-gray-700">
+              {creator.trend_narrative}
+            </p>
           )}
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-xl bg-surface-50 p-3">
               <p className="text-xs text-gray-500">Views Trend</p>
-              <p className="text-lg font-bold text-emerald-600">{creator.views_trend ?? "N/A"}</p>
+              <p className="text-lg font-bold text-emerald-600">
+                {creator.views_trend ?? "N/A"}
+              </p>
             </div>
             <div className="rounded-xl bg-surface-50 p-3">
               <p className="text-xs text-gray-500">Engagement Trend</p>
-              <p className="text-lg font-bold text-emerald-600">{creator.engagement_trend ?? "N/A"}</p>
+              <p className="text-lg font-bold text-emerald-600">
+                {creator.engagement_trend ?? "N/A"}
+              </p>
             </div>
             <div className="rounded-xl bg-surface-50 p-3">
               <p className="text-xs text-gray-500">Avg Views</p>
-              <p className="text-lg font-bold text-gray-800">{formatNumber(avgViews)}</p>
+              <p className="text-lg font-bold text-gray-800">
+                {formatNumber(avgViews)}
+              </p>
             </div>
             <div className="rounded-xl bg-surface-50 p-3">
               <p className="text-xs text-gray-500">Avg Engagement</p>
-              <p className="text-lg font-bold text-gray-800">{avgEngagement.toFixed(2)}%</p>
+              <p className="text-lg font-bold text-gray-800">
+                {avgEngagement.toFixed(2)}%
+              </p>
             </div>
           </div>
         </div>
@@ -528,15 +663,21 @@ export function CreatorDetail({
           </h2>
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-xl bg-surface-50 p-4 text-center">
-              <p className="text-2xl font-bold text-gray-800">{creator.completed_campaigns}</p>
+              <p className="text-2xl font-bold text-gray-800">
+                {creator.completed_campaigns}
+              </p>
               <p className="text-xs text-gray-500">Completed Campaigns</p>
             </div>
             <div className="rounded-xl bg-surface-50 p-4 text-center">
-              <p className="text-2xl font-bold text-emerald-600">{creator.delivery_rate}%</p>
+              <p className="text-2xl font-bold text-emerald-600">
+                {creator.delivery_rate}%
+              </p>
               <p className="text-xs text-gray-500">Delivery Rate</p>
             </div>
             <div className="rounded-xl bg-surface-50 p-4 text-center">
-              <p className="text-2xl font-bold text-brand-primary">{creator.avg_performance_vs_projection ?? "N/A"}</p>
+              <p className="text-2xl font-bold text-brand-primary">
+                {creator.avg_performance_vs_projection ?? "N/A"}
+              </p>
               <p className="text-xs text-gray-500">vs Projection</p>
             </div>
             <div className="rounded-xl bg-surface-50 p-4 text-center">
@@ -557,30 +698,53 @@ export function CreatorDetail({
             <table className="w-full">
               <thead>
                 <tr className="border-b border-surface-100">
-                  <th className="pb-3 text-left"><SortHeader field="title" label="Title" /></th>
-                  <th className="pb-3 text-left"><SortHeader field="published_at" label="Published" /></th>
-                  <th className="pb-3 text-right"><SortHeader field="views" label="Views" /></th>
-                  <th className="pb-3 text-right"><SortHeader field="likes" label="Likes" /></th>
-                  <th className="pb-3 text-right"><SortHeader field="comments" label="Comments" /></th>
-                  <th className="pb-3 text-right"><SortHeader field="engagement_rate" label="Engagement" /></th>
+                  <th className="pb-3 text-left">
+                    <SortHeader field="title" label="Title" />
+                  </th>
+                  <th className="pb-3 text-left">
+                    <SortHeader field="published_at" label="Published" />
+                  </th>
+                  <th className="pb-3 text-right">
+                    <SortHeader field="views" label="Views" />
+                  </th>
+                  <th className="pb-3 text-right">
+                    <SortHeader field="likes" label="Likes" />
+                  </th>
+                  <th className="pb-3 text-right">
+                    <SortHeader field="comments" label="Comments" />
+                  </th>
+                  <th className="pb-3 text-right">
+                    <SortHeader field="engagement_rate" label="Engagement" />
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-50">
                 {sortedVideos.map((video) => (
                   <tr key={video.id} className="hover:bg-surface-50">
-                    <td className="py-3 pr-4 text-sm font-medium text-gray-800">{video.title}</td>
+                    <td className="py-3 pr-4 text-sm font-medium text-gray-800">
+                      {video.title}
+                    </td>
                     <td className="py-3 pr-4 text-sm text-gray-500">
                       {video.published_at
-                        ? new Date(video.published_at).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })
+                        ? new Date(video.published_at).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            }
+                          )
                         : "—"}
                     </td>
-                    <td className="py-3 text-right text-sm text-gray-700">{formatNumber(video.views)}</td>
-                    <td className="py-3 text-right text-sm text-gray-700">{formatNumber(video.likes)}</td>
-                    <td className="py-3 text-right text-sm text-gray-700">{formatNumber(video.comments)}</td>
+                    <td className="py-3 text-right text-sm text-gray-700">
+                      {formatNumber(video.views)}
+                    </td>
+                    <td className="py-3 text-right text-sm text-gray-700">
+                      {formatNumber(video.likes)}
+                    </td>
+                    <td className="py-3 text-right text-sm text-gray-700">
+                      {formatNumber(video.comments)}
+                    </td>
                     <td className="py-3 text-right text-sm font-medium text-brand-primary">
                       {video.engagement_rate.toFixed(2)}%
                     </td>
@@ -601,9 +765,13 @@ export function CreatorDetail({
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-medium text-gray-500">Budget</label>
+                <label className="text-xs font-medium text-gray-500">
+                  Budget
+                </label>
                 <div className="relative mt-1">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-500">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-500">
+                    $
+                  </span>
                   <input
                     className="w-full rounded-xl border border-surface-200 bg-surface-50 py-2.5 pl-8 pr-4 text-sm text-gray-800 outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
                     type="number"
@@ -613,7 +781,9 @@ export function CreatorDetail({
                 </div>
               </div>
               <div>
-                <label className="text-xs font-medium text-gray-500">Campaign Goal</label>
+                <label className="text-xs font-medium text-gray-500">
+                  Campaign Goal
+                </label>
                 <select
                   className="mt-1 w-full rounded-xl border border-surface-200 bg-surface-50 px-4 py-2.5 text-sm text-gray-800 outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
                   value={goal}
@@ -637,23 +807,35 @@ export function CreatorDetail({
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                   <div className="rounded-xl bg-surface-50 p-4">
                     <p className="text-xs text-gray-500">Estimated Reach</p>
-                    <p className="mt-1 text-lg font-bold text-gray-800">{projections[goal]?.reach}</p>
+                    <p className="mt-1 text-lg font-bold text-gray-800">
+                      {projections[goal]?.reach}
+                    </p>
                   </div>
                   <div className="rounded-xl bg-surface-50 p-4">
-                    <p className="text-xs text-gray-500">Expected Engagements</p>
-                    <p className="mt-1 text-lg font-bold text-gray-800">{projections[goal]?.engagements}</p>
+                    <p className="text-xs text-gray-500">
+                      Expected Engagements
+                    </p>
+                    <p className="mt-1 text-lg font-bold text-gray-800">
+                      {projections[goal]?.engagements}
+                    </p>
                   </div>
                   <div className="rounded-xl bg-surface-50 p-4">
                     <p className="text-xs text-gray-500">Est. Conversions</p>
-                    <p className="mt-1 text-lg font-bold text-gray-800">{projections[goal]?.conversions}</p>
+                    <p className="mt-1 text-lg font-bold text-gray-800">
+                      {projections[goal]?.conversions}
+                    </p>
                   </div>
                   <div className="rounded-xl bg-surface-50 p-4">
                     <p className="text-xs text-gray-500">Cost per Engagement</p>
-                    <p className="mt-1 text-lg font-bold text-gray-800">{projections[goal]?.cpe}</p>
+                    <p className="mt-1 text-lg font-bold text-gray-800">
+                      {projections[goal]?.cpe}
+                    </p>
                   </div>
                   <div className="rounded-xl bg-surface-50 p-4">
                     <p className="text-xs text-gray-500">ROI Score</p>
-                    <p className="mt-1 text-lg font-bold text-emerald-600">{projections[goal]?.roi}</p>
+                    <p className="mt-1 text-lg font-bold text-emerald-600">
+                      {projections[goal]?.roi}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -672,19 +854,35 @@ export function CreatorDetail({
             <table className="w-full">
               <thead>
                 <tr className="border-b border-surface-100">
-                  <th className="pb-3 text-left text-xs font-medium text-gray-500">Brand</th>
-                  <th className="pb-3 text-left text-xs font-medium text-gray-500">Format</th>
-                  <th className="pb-3 text-right text-xs font-medium text-gray-500">Rate</th>
-                  <th className="pb-3 text-left text-xs font-medium text-gray-500">Date</th>
-                  <th className="pb-3 text-left text-xs font-medium text-gray-500">Outcome</th>
+                  <th className="pb-3 text-left text-xs font-medium text-gray-500">
+                    Brand
+                  </th>
+                  <th className="pb-3 text-left text-xs font-medium text-gray-500">
+                    Format
+                  </th>
+                  <th className="pb-3 text-right text-xs font-medium text-gray-500">
+                    Rate
+                  </th>
+                  <th className="pb-3 text-left text-xs font-medium text-gray-500">
+                    Date
+                  </th>
+                  <th className="pb-3 text-left text-xs font-medium text-gray-500">
+                    Outcome
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-50">
                 {creator.deal_history.map((deal, i) => (
                   <tr key={i} className="hover:bg-surface-50">
-                    <td className="py-3 text-sm font-medium text-gray-800">{deal.brand}</td>
-                    <td className="py-3 text-sm text-gray-600">{deal.format}</td>
-                    <td className="py-3 text-right text-sm text-gray-700">${deal.rate.toLocaleString()}</td>
+                    <td className="py-3 text-sm font-medium text-gray-800">
+                      {deal.brand}
+                    </td>
+                    <td className="py-3 text-sm text-gray-600">
+                      {deal.format}
+                    </td>
+                    <td className="py-3 text-right text-sm text-gray-700">
+                      ${deal.rate.toLocaleString()}
+                    </td>
                     <td className="py-3 text-sm text-gray-500">{deal.date}</td>
                     <td className="py-3">
                       <span
