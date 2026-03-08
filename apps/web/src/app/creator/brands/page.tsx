@@ -1,3 +1,4 @@
+import { Flame, Monitor, Star } from "lucide-react";
 import Link from "next/link";
 
 import brandsData from "@/data/mock/brands.json";
@@ -75,12 +76,12 @@ export default function CreatorBrandsPage() {
                     </h3>
                     {idx === 0 && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-600">
-                        🔥 HIGH MATCH
+                        <Flame className="h-3 w-3" /> HIGH MATCH
                       </span>
                     )}
                     {idx > 0 && idx < 3 && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-accent-50 px-2.5 py-0.5 text-xs font-semibold text-accent-400">
-                        ⭐ Suggested
+                        <Star className="h-3 w-3" /> Suggested
                       </span>
                     )}
                   </div>
@@ -143,8 +144,8 @@ export default function CreatorBrandsPage() {
                             {fmt}
                           </span>
                         ))}
-                        <span className="rounded-full bg-white px-2 py-0.5 text-xs text-gray-500">
-                          📺 {brief.platform}
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-xs text-gray-500">
+                          <Monitor className="h-3 w-3" /> {brief.platform}
                         </span>
                       </div>
                     </div>

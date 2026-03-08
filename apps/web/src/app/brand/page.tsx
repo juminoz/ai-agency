@@ -1,7 +1,16 @@
+import {
+  type LucideIcon,
+  BarChart3,
+  CheckCircle,
+  Handshake,
+  MessageSquare,
+  Send,
+} from "lucide-react";
 import Link from "next/link";
 
 import brands from "@/data/mock/brands.json";
 import deals from "@/data/mock/deals.json";
+
 
 // Use NovaTech (brand-1) as the logged-in brand
 const brand = brands.find((b) => b.id === "brand-1")!;
@@ -16,34 +25,51 @@ const budgetSpent = brandDeals
   .reduce((sum, d) => sum + (d.agreedRate ?? 0), 0);
 
 // Recent activity feed (inline mock)
-const recentActivity = [
+const recentActivity: {
+  id: string;
+  icon: LucideIcon;
+  iconColor: string;
+  iconBg: string;
+  text: string;
+  time: string;
+}[] = [
   {
     id: "a1",
-    icon: "📨",
+    icon: Send,
+    iconColor: "text-brand-primary",
+    iconBg: "bg-brand-50",
     text: "Deal request sent to Marcus Chen for Smart Speaker Launch",
     time: "2 days ago",
   },
   {
     id: "a2",
-    icon: "💬",
+    icon: MessageSquare,
+    iconColor: "text-blue-500",
+    iconBg: "bg-blue-50",
     text: "Marcus Chen viewed your campaign brief",
     time: "2 days ago",
   },
   {
     id: "a3",
-    icon: "✅",
+    icon: CheckCircle,
+    iconColor: "text-green-500",
+    iconBg: "bg-green-50",
     text: "Previous campaign with Maya Rodriguez completed — +32% vs projection",
     time: "5 days ago",
   },
   {
     id: "a4",
-    icon: "📊",
+    icon: BarChart3,
+    iconColor: "text-violet-500",
+    iconBg: "bg-violet-50",
     text: "Home Automation Series brief published — awaiting creator matches",
     time: "1 week ago",
   },
   {
     id: "a5",
-    icon: "🤝",
+    icon: Handshake,
+    iconColor: "text-accent-primary",
+    iconBg: "bg-accent-50",
     text: "Deal with Marcus Chen completed for RTX 5080 review — delivered on time",
     time: "3 weeks ago",
   },
@@ -182,10 +208,12 @@ export default function BrandDashboardPage() {
           </h2>
           <div className="rounded-card bg-white shadow-card">
             <ul className="divide-y divide-surface-100">
-              {recentActivity.map((activity) => (
+              {recentActivity.map((activity) => {
+                const Icon = activity.icon;
+                return (
                 <li key={activity.id} className="flex gap-3 px-4 py-3">
-                  <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-surface-100 text-sm">
-                    {activity.icon}
+                  <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${activity.iconBg}`}>
+                    <Icon className={`h-4 w-4 ${activity.iconColor}`} />
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-gray-700">{activity.text}</p>
@@ -194,7 +222,8 @@ export default function BrandDashboardPage() {
                     </p>
                   </div>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           </div>
         </div>

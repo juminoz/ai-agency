@@ -1,5 +1,22 @@
 "use client";
 
+import {
+  type LucideIcon,
+  Building2,
+  Database,
+  Handshake,
+  HelpCircle,
+  Home,
+  LayoutDashboard,
+  Megaphone,
+  MessageSquare,
+  Search,
+  Settings,
+  Shield,
+  Star,
+  TrendingUp,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -8,35 +25,35 @@ type Role = "creator" | "brand" | "admin";
 interface NavItem {
   label: string;
   href: string;
-  icon: string;
+  icon: LucideIcon;
 }
 
 const NAV_ITEMS: Record<Role, NavItem[]> = {
   creator: [
-    { label: "Home", href: "/creator", icon: "🏠" },
-    { label: "My Profile", href: "/creator/profile", icon: "👤" },
-    { label: "Brands", href: "/creator/brands", icon: "🏢" },
-    { label: "Deals", href: "/creator/deals", icon: "🤝" },
-    { label: "Messages", href: "/creator/messages", icon: "💬" },
-    { label: "Settings", href: "/creator/settings", icon: "⚙️" },
+    { label: "Home", href: "/creator", icon: Home },
+    { label: "My Profile", href: "/creator/profile", icon: User },
+    { label: "Brands", href: "/creator/brands", icon: Building2 },
+    { label: "Deals", href: "/creator/deals", icon: Handshake },
+    { label: "Messages", href: "/creator/messages", icon: MessageSquare },
+    { label: "Settings", href: "/creator/settings", icon: Settings },
   ],
   brand: [
-    { label: "Home", href: "/brand", icon: "🏠" },
-    { label: "Find Creators", href: "/brand/search", icon: "🔍" },
-    { label: "Campaigns", href: "/brand/campaigns", icon: "📢" },
-    { label: "Shortlist", href: "/brand/shortlists", icon: "⭐" },
-    { label: "Deals", href: "/brand/deals", icon: "🤝" },
-    { label: "Messages", href: "/brand/messages", icon: "💬" },
-    { label: "Settings", href: "/brand/settings", icon: "⚙️" },
+    { label: "Home", href: "/brand", icon: Home },
+    { label: "Find Creators", href: "/brand/search", icon: Search },
+    { label: "Campaigns", href: "/brand/campaigns", icon: Megaphone },
+    { label: "Shortlist", href: "/brand/shortlists", icon: Star },
+    { label: "Deals", href: "/brand/deals", icon: Handshake },
+    { label: "Messages", href: "/brand/messages", icon: MessageSquare },
+    { label: "Settings", href: "/brand/settings", icon: Settings },
   ],
   admin: [
-    { label: "Dashboard", href: "/admin", icon: "📊" },
-    { label: "Creators", href: "/admin/creators", icon: "👤" },
-    { label: "Brands", href: "/admin/brands", icon: "🏢" },
-    { label: "Data Pipeline", href: "/admin/data", icon: "🗄️" },
-    { label: "Moderation", href: "/admin/moderation", icon: "🛡️" },
-    { label: "Analytics", href: "/admin/analytics", icon: "📈" },
-    { label: "Settings", href: "/admin/settings", icon: "⚙️" },
+    { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { label: "Creators", href: "/admin/creators", icon: User },
+    { label: "Brands", href: "/admin/brands", icon: Building2 },
+    { label: "Data Pipeline", href: "/admin/data", icon: Database },
+    { label: "Moderation", href: "/admin/moderation", icon: Shield },
+    { label: "Analytics", href: "/admin/analytics", icon: TrendingUp },
+    { label: "Settings", href: "/admin/settings", icon: Settings },
   ],
 };
 
@@ -70,6 +87,7 @@ export function SidebarNav({ role }: SidebarNavProps) {
         <ul className="space-y-1">
           {items.map((item) => {
             const active = isActive(pathname, item.href, role);
+            const Icon = item.icon;
             return (
               <li key={item.href}>
                 <Link
@@ -80,7 +98,7 @@ export function SidebarNav({ role }: SidebarNavProps) {
                       : "text-gray-600 hover:bg-surface-100 hover:text-gray-900"
                   }`}
                 >
-                  <span className="text-base">{item.icon}</span>
+                  <Icon className="h-[18px] w-[18px]" />
                   {item.label}
                 </Link>
               </li>
@@ -93,7 +111,7 @@ export function SidebarNav({ role }: SidebarNavProps) {
       <div className="px-4 pb-3">
         <div className="rounded-card bg-surface-100 p-4">
           <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-accent-100">
-            <span className="text-lg">🤖</span>
+            <HelpCircle className="h-5 w-5 text-accent-primary" />
           </div>
           <p className="text-sm font-medium text-gray-800">Need help?</p>
           <p className="mt-0.5 text-xs text-gray-500">
@@ -108,19 +126,7 @@ export function SidebarNav({ role }: SidebarNavProps) {
       {/* Search */}
       <div className="border-t border-surface-200 px-4 py-3">
         <div className="flex items-center gap-2 rounded-xl bg-surface-50 px-3 py-2">
-          <svg
-            className="h-4 w-4 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          <Search className="h-4 w-4 text-gray-400" />
           <input
             type="text"
             placeholder="Search..."
@@ -192,6 +198,7 @@ export function MobileSidebarToggle({
           <ul className="space-y-1">
             {items.map((item) => {
               const active = isActive(pathname, item.href, role);
+              const Icon = item.icon;
               return (
                 <li key={item.href}>
                   <Link
@@ -203,7 +210,7 @@ export function MobileSidebarToggle({
                         : "text-gray-600 hover:bg-surface-100 hover:text-gray-900"
                     }`}
                   >
-                    <span className="text-base">{item.icon}</span>
+                    <Icon className="h-[18px] w-[18px]" />
                     {item.label}
                   </Link>
                 </li>

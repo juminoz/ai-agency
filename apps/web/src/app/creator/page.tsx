@@ -1,3 +1,5 @@
+import { Flame, MapPin, Play } from "lucide-react";
+
 import { BrandMatchCard } from "@/components/brand-match-card";
 import { ScoreGauge } from "@/components/score-gauge";
 import brandsData from "@/data/mock/brands.json";
@@ -64,7 +66,7 @@ const audienceDemographics = {
     { range: "35-44", pct: 16 },
     { range: "45+", pct: 9 },
   ],
-  topLocation: { country: "United States", flag: "🇺🇸", pct: 62 },
+  topLocation: { country: "United States", pct: 62 },
 };
 
 export default function CreatorDashboardPage() {
@@ -77,9 +79,6 @@ export default function CreatorDashboardPage() {
       {/* Greeting */}
       <h1 className="mb-6 text-2xl font-bold text-gray-800">
         {greeting}, {creator.name.split(" ")[0]}{" "}
-        <span role="img" aria-label="wave">
-          👋
-        </span>
       </h1>
 
       {/* ────────── Row 1: Three cards ────────── */}
@@ -172,7 +171,7 @@ export default function CreatorDashboardPage() {
 
           {/* Top location */}
           <div className="flex items-center gap-2 rounded-xl bg-surface-50 p-3">
-            <span className="text-xl">{audienceDemographics.topLocation.flag}</span>
+            <MapPin className="h-5 w-5 text-brand-primary" />
             <div className="text-sm">
               <p className="font-medium text-gray-700">
                 {audienceDemographics.topLocation.country}
@@ -193,8 +192,8 @@ export default function CreatorDashboardPage() {
             <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-400">
               Brand Matches For You
             </h3>
-            <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-bold uppercase text-red-500">
-              🔥 High Match
+            <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-bold uppercase text-red-500">
+              <Flame className="h-3 w-3" /> High Match
             </span>
           </div>
 
@@ -272,8 +271,8 @@ export default function CreatorDashboardPage() {
                   className="flex items-start gap-3 rounded-xl bg-surface-50 p-3 transition-colors hover:bg-surface-100"
                 >
                   {/* Thumbnail placeholder */}
-                  <div className="flex h-14 w-20 shrink-0 items-center justify-center rounded-lg bg-brand-100 text-xs text-brand-primary">
-                    ▶
+                  <div className="flex h-14 w-20 shrink-0 items-center justify-center rounded-lg bg-brand-100">
+                    <Play className="h-4 w-4 text-brand-primary" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="line-clamp-2 text-xs font-medium text-gray-700">
