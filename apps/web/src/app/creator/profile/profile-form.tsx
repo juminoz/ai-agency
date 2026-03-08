@@ -3,10 +3,11 @@
 import { useActionState, useState } from "react";
 
 
+import { saveCreatorProfile } from "./actions";
+
 import { ScoreGauge } from "@/components/score-gauge";
 import { type CreatorProfile } from "@/lib/supabase/types";
 
-import { saveCreatorProfile } from "./actions";
 
 
 const ALL_CATEGORIES = [
