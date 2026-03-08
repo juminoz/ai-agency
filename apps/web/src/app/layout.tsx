@@ -6,8 +6,9 @@ import "@repo/ui/globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "AI Agency",
-  description: "AI Agency - Powered by Next.js",
+  title: "BrandBuddy — Connect with the right creators for your brand",
+  description:
+    "Data-driven creator-brand matching platform. Find, vet, and collaborate with influencers who fit your brand.",
 };
 
 export default function RootLayout({
