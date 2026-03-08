@@ -31,7 +31,13 @@ export default function SignupPage() {
       });
 
       if (authError) {
-        setError(authError.message);
+        console.error(
+          "Signup error:",
+          authError.status,
+          authError.message,
+          authError
+        );
+        setError(`${authError.message} (status: ${authError.status})`);
         setLoading(false);
         return;
       }
