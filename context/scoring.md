@@ -226,12 +226,15 @@ That is enough to compute your first-pass fit score.
 
 ## **Recommended scoring model**
 
-fit\_score \=  
-30% topic relevance  
-25% recent views  
-20% engagement health  
-15% activity/consistency  
-10% comment-audience match
+The Brand Buddy Score is a single 0–100 number shown on every creator card. Brands see one score and one ranked list. The 6-component breakdown is visible only on the creator's own dashboard.
+
+brand\_buddy\_score \=
+25% topic relevance
+20% recent views
+18% engagement health
+15% authenticity (section 6)
+12% activity/consistency
+10% comment-audience match (section 10)
 
 ## **What the Data API still cannot tell you**
 
@@ -280,22 +283,33 @@ Use the same data already fetched in the pipeline:
 
 * videos.list for view/like/comment counts per video
 * commentThreads.list for comment text samples
-* channels.list for subscriber count history context
+* channels.list for current subscriber count (stored per refresh to build historical snapshots)
 
 ### **What to inspect**
 
 * **View spike detection**: flag videos where viewCount > 5× the channel's median recent views
 * **Comment quality**: send a sample of comments to the Claude API and classify as genuine vs spam/bot
 * **Like-to-view anomaly**: an unusually high like ratio (e.g., likeCount/viewCount > 10%) suggests purchased engagement
-* **Follower growth patterns**: compare subscriber count growth vs view trends for consistency — rapid subscriber growth with flat views is a red flag
+* **Follower growth patterns** *(activated after 30+ days of stored snapshots)*: compare subscriber count growth vs view trends for consistency — rapid subscriber growth with flat views is a red flag
 
 ### **Heuristic**
+
+**Phase 1 (launch — before 30 days of subscriber snapshots exist):**
+
+authenticity_score =
+  33% view consistency (inverse of spike ratio)
++ 33% comment quality (% classified as genuine)
++ 34% like-to-view ratio normality
+
+**Phase 2 (after 30+ days of stored subscriber snapshots for a channel):**
 
 authenticity_score =
   25% view consistency (inverse of spike ratio)
 + 25% comment quality (% classified as genuine)
 + 25% like-to-view ratio normality
 + 25% follower-growth consistency
+
+The system stores a timestamped subscriber count on every data refresh (24-hour cache cycle). Once a channel has 30+ days of snapshots, the fourth signal activates automatically and weights rebalance. No manual intervention required.
 
 ### **Output**
 
