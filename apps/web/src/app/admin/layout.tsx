@@ -11,9 +11,11 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/moderation": "Moderation",
   "/admin/analytics": "Analytics",
   "/admin/settings": "Settings",
-  "/admin/import": "Import",
-  "/admin/search": "Search",
-  "/admin/simulate": "Simulator",
+  "/admin/data": "Data Pipeline",
+  "/admin/data/import": "Import Channels",
+  "/admin/data/search": "Search Channels",
+  "/admin/data/simulate": "Campaign Simulator",
+  "/admin/data/analytics": "Pipeline Analytics",
 };
 
 export default function AdminLayout({
@@ -25,7 +27,7 @@ export default function AdminLayout({
   const pageTitle = PAGE_TITLES[pathname] ?? "Dashboard";
 
   return (
-    <DashboardShell role="admin" pageTitle={pageTitle}>
+    <DashboardShell pageTitle={pageTitle} role="admin">
       {children}
     </DashboardShell>
   );

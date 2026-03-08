@@ -1,3 +1,4 @@
+import { DataBreadcrumb } from "@/components/data-breadcrumb";
 import { createServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -9,20 +10,28 @@ interface CountResult {
 export default async function AnalyticsPage() {
   const supabase = createServerClient();
 
-  const [channelsResult, videosResult, commentsResult, scoresResult, analysesResult] =
-    await Promise.all([
-      supabase.from("channels").select("*", { count: "exact", head: true }),
-      supabase.from("videos").select("*", { count: "exact", head: true }),
-      supabase.from("comments").select("*", { count: "exact", head: true }),
-      supabase.from("channel_scores").select("*", { count: "exact", head: true }),
-      supabase.from("ai_analyses").select("*", { count: "exact", head: true }),
-    ]);
+  const [
+    channelsResult,
+    videosResult,
+    commentsResult,
+    scoresResult,
+    analysesResult,
+  ] = await Promise.all([
+    supabase.from("channels").select("*", { count: "exact", head: true }),
+    supabase.from("videos").select("*", { count: "exact", head: true }),
+    supabase.from("comments").select("*", { count: "exact", head: true }),
+    supabase.from("channel_scores").select("*", { count: "exact", head: true }),
+    supabase.from("ai_analyses").select("*", { count: "exact", head: true }),
+  ]);
 
   const stats = [
     { label: "Channels", value: (channelsResult as CountResult).count ?? 0 },
     { label: "Videos", value: (videosResult as CountResult).count ?? 0 },
     { label: "Comments", value: (commentsResult as CountResult).count ?? 0 },
-    { label: "Scored Channels", value: (scoresResult as CountResult).count ?? 0 },
+    {
+      label: "Scored Channels",
+      value: (scoresResult as CountResult).count ?? 0,
+    },
     { label: "AI Analyses", value: (analysesResult as CountResult).count ?? 0 },
   ];
 
@@ -39,6 +48,7 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="space-y-8">
+      <DataBreadcrumb current="Analytics" />
       <div>
         <h1 className="text-2xl font-bold">Platform Analytics</h1>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -49,10 +59,7 @@ export default async function AnalyticsPage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-lg border p-4 text-center"
-          >
+          <div key={stat.label} className="rounded-lg border p-4 text-center">
             <p className="text-2xl font-bold">{stat.value.toLocaleString()}</p>
             <p className="text-sm text-muted-foreground">{stat.label}</p>
           </div>
@@ -71,14 +78,18 @@ export default async function AnalyticsPage() {
       <div className="space-y-3">
         <h2 className="text-lg font-semibold">Recent Ingestions</h2>
         {(recentChannels ?? []).length === 0 ? (
-          <p className="text-sm text-muted-foreground">No channels ingested yet.</p>
+          <p className="text-sm text-muted-foreground">
+            No channels ingested yet.
+          </p>
         ) : (
           <div className="rounded-lg border">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/50">
                   <th className="px-4 py-2 text-left font-medium">Channel</th>
-                  <th className="px-4 py-2 text-right font-medium">Subscribers</th>
+                  <th className="px-4 py-2 text-right font-medium">
+                    Subscribers
+                  </th>
                   <th className="px-4 py-2 text-right font-medium">Fetched</th>
                 </tr>
               </thead>

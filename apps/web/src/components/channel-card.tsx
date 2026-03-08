@@ -39,7 +39,7 @@ export function ChannelCard({
   return (
     <Link
       className="block rounded-lg border bg-card p-4 transition-colors hover:bg-accent/50"
-      href={`/admin/channels/${channelId}`}
+      href={`/admin/data/channels/${channelId}`}
     >
       <div className="flex gap-4">
         {thumbnailUrl ? (

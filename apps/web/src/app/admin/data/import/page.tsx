@@ -1,8 +1,10 @@
 import { CsvUploader } from "@/components/csv-uploader";
+import { DataBreadcrumb } from "@/components/data-breadcrumb";
 
 export default function ImportPage() {
   return (
     <div className="mx-auto max-w-xl space-y-6">
+      <DataBreadcrumb current="Import" />
       <div>
         <h1 className="text-2xl font-bold">Import Channels</h1>
         <p className="mt-1 text-sm text-muted-foreground">

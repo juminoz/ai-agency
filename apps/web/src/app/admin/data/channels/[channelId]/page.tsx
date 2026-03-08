@@ -2,6 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { AuthenticityBadge } from "@/components/authenticity-badge";
+import { DataBreadcrumb } from "@/components/data-breadcrumb";
 import { InterestGraph } from "@/components/interest-graph";
 import { ScoreBreakdown } from "@/components/score-breakdown";
 import { createServerClient } from "@/lib/supabase/server";
@@ -75,6 +76,7 @@ export default async function ChannelDetailPage({ params }: PageProps) {
 
   return (
     <div className="space-y-8">
+      <DataBreadcrumb current="Channel Detail" />
       {/* Channel Header */}
       <div className="flex items-start gap-6">
         {typedChannel.thumbnail_url && (

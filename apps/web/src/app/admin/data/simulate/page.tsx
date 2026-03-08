@@ -1,8 +1,10 @@
 import { CampaignSimulator } from "@/components/campaign-simulator";
+import { DataBreadcrumb } from "@/components/data-breadcrumb";
 
 export default function SimulatePage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
+      <DataBreadcrumb current="Simulator" />
       <div>
         <h1 className="text-2xl font-bold">Campaign Simulator</h1>
         <p className="mt-1 text-sm text-muted-foreground">

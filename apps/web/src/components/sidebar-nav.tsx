@@ -33,6 +33,7 @@ const NAV_ITEMS: Record<Role, NavItem[]> = {
     { label: "Dashboard", href: "/admin", icon: "📊" },
     { label: "Creators", href: "/admin/creators", icon: "👤" },
     { label: "Brands", href: "/admin/brands", icon: "🏢" },
+    { label: "Data Pipeline", href: "/admin/data", icon: "🗄️" },
     { label: "Moderation", href: "/admin/moderation", icon: "🛡️" },
     { label: "Analytics", href: "/admin/analytics", icon: "📈" },
     { label: "Settings", href: "/admin/settings", icon: "⚙️" },
@@ -167,9 +168,22 @@ export function MobileSidebarToggle({
             </div>
             <span className="text-lg font-bold text-gray-800">Brand Buddy</span>
           </div>
-          <button onClick={onToggle} className="text-gray-500 hover:text-gray-700">
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <button
+            onClick={onToggle}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>

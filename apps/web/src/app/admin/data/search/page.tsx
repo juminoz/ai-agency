@@ -4,6 +4,7 @@ import { Button } from "@repo/ui/components/button";
 import { useCallback, useState } from "react";
 
 import { ChannelCard } from "@/components/channel-card";
+import { DataBreadcrumb } from "@/components/data-breadcrumb";
 
 interface SearchResult {
   channel: {
@@ -70,6 +71,7 @@ export default function SearchPage() {
 
   return (
     <div className="space-y-6">
+      <DataBreadcrumb current="Search" />
       <div>
         <h1 className="text-2xl font-bold">Brand Intent Search</h1>
         <p className="mt-1 text-sm text-muted-foreground">
