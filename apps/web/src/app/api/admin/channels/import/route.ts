@@ -5,7 +5,7 @@ import { z } from "zod";
 import { type PipelineResult, ingestChannel } from "@/lib/youtube/pipeline";
 
 const JsonImportSchema = z.object({
-  channels: z.array(z.string().min(1)).min(1).max(100),
+  channels: z.array(z.string().min(1)).min(1).max(500),
 });
 
 export async function POST(request: Request) {
@@ -17,8 +17,17 @@ export async function POST(request: Request) {
       const body = await request.json();
       const parsed = JsonImportSchema.safeParse(body);
       if (!parsed.success) {
+        console.error(
+          "Import validation failed:",
+          JSON.stringify(parsed.error.flatten()),
+          "Body received:",
+          JSON.stringify(body)
+        );
         return NextResponse.json(
-          { error: 'Provide { channels: ["channelId1", "channelId2", ...] }' },
+          {
+            error: 'Provide { channels: ["channelId1", "channelId2", ...] }',
+            details: parsed.error.flatten(),
+          },
           { status: 400 }
         );
       }
@@ -53,9 +62,9 @@ export async function POST(request: Request) {
       );
     }
 
-    if (channelIds.length > 100) {
+    if (channelIds.length > 500) {
       return NextResponse.json(
-        { error: "Maximum 100 channels per import" },
+        { error: "Maximum 500 channels per import" },
         { status: 400 }
       );
     }
