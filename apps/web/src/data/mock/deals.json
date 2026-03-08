@@ -1,0 +1,183 @@
+[
+  {
+    "id": "deal-1",
+    "brandId": "brand-3",
+    "creatorId": "creator-1",
+    "brandName": "Wanderlux Hotels",
+    "brandLogo": "/logos/brand-3.png",
+    "creatorName": "Ashley Peters",
+    "creatorAvatar": "/avatars/creator-1.jpg",
+    "status": "received",
+    "brief": {
+      "title": "Tokyo Property Launch",
+      "budget": { "min": 3000, "max": 6000 },
+      "format": "Dedicated Video",
+      "timeline": "April 2026",
+      "goal": "awareness",
+      "deliverables": "1 dedicated video (10-15 min), 2 Instagram stories, 1 community post",
+      "exclusivity": { "category": "Hotels", "window": "60 days" }
+    },
+    "matchScore": 92,
+    "createdAt": "2026-03-05",
+    "messages": [
+      { "id": "m1", "sender": "brand", "senderName": "Wanderlux Hotels", "text": "Hi Ashley! We loved your Kyoto temple video. Our new Tokyo boutique hotel opens in April and we think your audience would be a perfect match. We'd love to host you for a 3-night stay and collaborate on a dedicated video. Details in the brief above!", "timestamp": "2026-03-05T10:30:00Z" }
+    ]
+  },
+  {
+    "id": "deal-2",
+    "brandId": "brand-1",
+    "creatorId": "creator-2",
+    "brandName": "NovaTech",
+    "brandLogo": "/logos/brand-1.png",
+    "creatorName": "Marcus Chen",
+    "creatorAvatar": "/avatars/creator-2.jpg",
+    "status": "negotiating",
+    "brief": {
+      "title": "Smart Speaker Review",
+      "budget": { "min": 3000, "max": 5000 },
+      "format": "Dedicated Video",
+      "timeline": "March 2026",
+      "goal": "awareness",
+      "deliverables": "1 honest review video (15-20 min), product provided",
+      "exclusivity": { "category": "Smart speakers", "window": "30 days" }
+    },
+    "matchScore": 88,
+    "createdAt": "2026-03-01",
+    "messages": [
+      { "id": "m2", "sender": "brand", "senderName": "NovaTech", "text": "Marcus, big fan of your benchmark content. We're launching our new AI smart speaker and would love an honest deep-dive review from you. Budget is $3-5K for a dedicated video.", "timestamp": "2026-03-01T14:00:00Z" },
+      { "id": "m3", "sender": "creator", "senderName": "Marcus Chen", "text": "Thanks for reaching out! I'm interested. My rate for dedicated reviews in this category is $4,500. I'd need the product 2 weeks before filming. Also, I always maintain editorial independence — can you confirm that's okay?", "timestamp": "2026-03-02T09:15:00Z" },
+      { "id": "m4", "sender": "brand", "senderName": "NovaTech", "text": "Absolutely, editorial independence is important to us too. $4,500 works. We can ship the product by March 10. We just ask for a heads-up on any major criticisms so we can prepare our response — but we won't ask you to change your review.", "timestamp": "2026-03-02T16:45:00Z" }
+    ]
+  },
+  {
+    "id": "deal-3",
+    "brandId": "brand-2",
+    "creatorId": "creator-4",
+    "brandName": "FuelUp Nutrition",
+    "brandLogo": "/logos/brand-2.png",
+    "creatorName": "Jordan Flex",
+    "creatorAvatar": "/avatars/creator-4.jpg",
+    "status": "agreed",
+    "brief": {
+      "title": "Plant Protein Integration",
+      "budget": { "min": 1800, "max": 1800 },
+      "format": "Integration",
+      "timeline": "March 15, 2026",
+      "goal": "conversion",
+      "deliverables": "1 integration in workout video, product mention with discount code",
+      "exclusivity": { "category": "Protein supplements", "window": "45 days" }
+    },
+    "matchScore": 85,
+    "createdAt": "2026-02-20",
+    "agreedRate": 1800,
+    "messages": [
+      { "id": "m5", "sender": "brand", "senderName": "FuelUp Nutrition", "text": "Hey Jordan! Your meal prep videos are exactly our vibe. Would you be open to integrating our new plant-based protein into an upcoming workout or meal prep video?", "timestamp": "2026-02-20T11:00:00Z" },
+      { "id": "m6", "sender": "creator", "senderName": "Jordan Flex", "text": "I'd be happy to! I've actually been looking to try more plant-based options. $1,800 for an integration works for me. Send me the product and a discount code for my audience.", "timestamp": "2026-02-21T08:30:00Z" },
+      { "id": "m7", "sender": "brand", "senderName": "FuelUp Nutrition", "text": "Deal! Shipping the product today. Your discount code will be JORDANFUEL for 25% off. Planning to go live in your March 15 video?", "timestamp": "2026-02-21T14:00:00Z" }
+    ]
+  },
+  {
+    "id": "deal-4",
+    "brandId": "brand-6",
+    "creatorId": "creator-7",
+    "brandName": "PixelForge Games",
+    "brandLogo": "/logos/brand-6.png",
+    "creatorName": "Kai Tanaka",
+    "creatorAvatar": "/avatars/creator-7.jpg",
+    "status": "live",
+    "brief": {
+      "title": "Echoes of the Void Launch Stream",
+      "budget": { "min": 2000, "max": 2000 },
+      "format": "Sponsored Stream",
+      "timeline": "March 1, 2026",
+      "goal": "awareness",
+      "deliverables": "2-hour sponsored stream, first impressions playthrough",
+      "exclusivity": { "category": "Indie RPGs", "window": "14 days" }
+    },
+    "matchScore": 91,
+    "createdAt": "2026-02-15",
+    "agreedRate": 2000,
+    "campaignUrl": "https://twitch.tv/animesenseikai/videos/echoes-launch",
+    "performance": {
+      "projectedViews": 15000,
+      "actualViews": 18200,
+      "projectedEngagements": 2000,
+      "actualEngagements": 2890,
+      "daysLive": 7,
+      "status": "above_target"
+    },
+    "messages": [
+      { "id": "m8", "sender": "brand", "senderName": "PixelForge Games", "text": "Kai, your anime content has great crossover with our art style. Would you be up for a launch day sponsored stream?", "timestamp": "2026-02-15T10:00:00Z" },
+      { "id": "m9", "sender": "creator", "senderName": "Kai Tanaka", "text": "The game looks amazing! I'm in. $2K for a 2-hour first impressions stream works. My community will love this.", "timestamp": "2026-02-15T18:00:00Z" },
+      { "id": "m10", "sender": "brand", "senderName": "PixelForge Games", "text": "Stream went great! Already seeing a spike in wishlists. Thanks Kai!", "timestamp": "2026-03-02T09:00:00Z" }
+    ]
+  },
+  {
+    "id": "deal-5",
+    "brandId": "brand-5",
+    "creatorId": "creator-5",
+    "brandName": "BrewCraft Beverages",
+    "brandLogo": "/logos/brand-5.png",
+    "creatorName": "Priya Kapoor",
+    "creatorAvatar": "/avatars/creator-5.jpg",
+    "status": "completed",
+    "brief": {
+      "title": "Cold Brew Recipe Integration",
+      "budget": { "min": 800, "max": 800 },
+      "format": "Integration",
+      "timeline": "February 2026",
+      "goal": "consideration",
+      "deliverables": "1 recipe video featuring cold brew as an ingredient",
+      "exclusivity": { "category": "Coffee brands", "window": "30 days" }
+    },
+    "matchScore": 78,
+    "createdAt": "2026-01-25",
+    "agreedRate": 800,
+    "campaignUrl": "https://youtube.com/watch?v=example123",
+    "performance": {
+      "projectedViews": 50000,
+      "actualViews": 67000,
+      "projectedEngagements": 3500,
+      "actualEngagements": 4800,
+      "daysLive": 30,
+      "status": "above_target"
+    },
+    "messages": []
+  },
+  {
+    "id": "deal-6",
+    "brandId": "brand-4",
+    "creatorId": "creator-6",
+    "brandName": "ThreadEco",
+    "brandLogo": "/logos/brand-4.png",
+    "creatorName": "Lena Vasquez",
+    "creatorAvatar": "/avatars/creator-6.jpg",
+    "status": "reviewed",
+    "brief": {
+      "title": "Spring Collection Haul",
+      "budget": { "min": 350, "max": 350 },
+      "format": "Dedicated Video",
+      "timeline": "January 2026",
+      "goal": "awareness",
+      "deliverables": "1 try-on haul video featuring 5+ pieces",
+      "exclusivity": null
+    },
+    "matchScore": 82,
+    "createdAt": "2025-12-15",
+    "agreedRate": 350,
+    "campaignUrl": "https://youtube.com/watch?v=example456",
+    "performance": {
+      "projectedViews": 4000,
+      "actualViews": 3800,
+      "projectedEngagements": 400,
+      "actualEngagements": 410,
+      "daysLive": 45,
+      "status": "on_target"
+    },
+    "review": {
+      "brandReview": { "delivery": 5, "communication": 4, "overall": 4, "note": "Great content, authentic voice. Slightly late on delivery but quality was worth the wait." },
+      "creatorReview": { "delivery": 5, "communication": 5, "overall": 5, "note": "Clear brief, fast payment, great product. Would work with again." }
+    },
+    "messages": []
+  }
+]

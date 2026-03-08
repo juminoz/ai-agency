@@ -1,0 +1,156 @@
+{
+  "totalCreators": 1247,
+  "totalBrands": 389,
+  "activeDeals": 67,
+  "completedDeals": 234,
+  "creatorsByTier": {
+    "nano": 412,
+    "micro": 534,
+    "mid": 213,
+    "macro": 72,
+    "mega": 16
+  },
+  "creatorsByPlatform": {
+    "youtube": 891,
+    "twitch": 356
+  },
+  "dealsThisMonth": 23,
+  "revenueThisMonth": 47800,
+  "flaggedAccounts": 8,
+  "pendingModeration": 3,
+  "apiQuotaUsed": 6234,
+  "apiQuotaLimit": 10000,
+  "recentRegistrations": [
+    {
+      "id": "reg-1",
+      "name": "Tyler Brooks",
+      "type": "creator",
+      "platform": "youtube",
+      "subscriberCount": 34000,
+      "registeredAt": "2026-03-08T07:45:00Z",
+      "status": "verified"
+    },
+    {
+      "id": "reg-2",
+      "name": "GreenLeaf Supplements",
+      "type": "brand",
+      "platform": null,
+      "subscriberCount": null,
+      "registeredAt": "2026-03-07T19:20:00Z",
+      "status": "pending_verification"
+    },
+    {
+      "id": "reg-3",
+      "name": "Samira Ali",
+      "type": "creator",
+      "platform": "twitch",
+      "subscriberCount": 12500,
+      "registeredAt": "2026-03-07T14:10:00Z",
+      "status": "verified"
+    },
+    {
+      "id": "reg-4",
+      "name": "UrbanGear Co.",
+      "type": "brand",
+      "platform": null,
+      "subscriberCount": null,
+      "registeredAt": "2026-03-07T11:00:00Z",
+      "status": "verified"
+    },
+    {
+      "id": "reg-5",
+      "name": "David Kim",
+      "type": "creator",
+      "platform": "youtube",
+      "subscriberCount": 178000,
+      "registeredAt": "2026-03-06T22:30:00Z",
+      "status": "verified"
+    },
+    {
+      "id": "reg-6",
+      "name": "CloudNine Audio",
+      "type": "brand",
+      "platform": null,
+      "subscriberCount": null,
+      "registeredAt": "2026-03-06T16:45:00Z",
+      "status": "verified"
+    },
+    {
+      "id": "reg-7",
+      "name": "EmmaPlays",
+      "type": "creator",
+      "platform": "twitch",
+      "subscriberCount": 5600,
+      "registeredAt": "2026-03-06T09:15:00Z",
+      "status": "pending_verification"
+    },
+    {
+      "id": "reg-8",
+      "name": "Marco Vitale",
+      "type": "creator",
+      "platform": "youtube",
+      "subscriberCount": 890000,
+      "registeredAt": "2026-03-05T20:00:00Z",
+      "status": "verified"
+    }
+  ],
+  "moderationQueue": [
+    {
+      "id": "mod-1",
+      "type": "flagged_content",
+      "creatorId": "creator-ext-45",
+      "creatorName": "QuickCashGamer",
+      "reason": "Potential fake engagement detected — like-to-view ratio anomaly on 3 recent videos",
+      "severity": "medium",
+      "flaggedAt": "2026-03-07T18:00:00Z",
+      "status": "pending"
+    },
+    {
+      "id": "mod-2",
+      "type": "brand_complaint",
+      "brandId": "brand-ext-12",
+      "brandName": "VitaBoost",
+      "creatorId": "creator-ext-78",
+      "creatorName": "FitnessFrenzy",
+      "reason": "Brand reports creator missed agreed delivery deadline by 2 weeks with no communication",
+      "severity": "high",
+      "flaggedAt": "2026-03-06T10:30:00Z",
+      "status": "pending"
+    },
+    {
+      "id": "mod-3",
+      "type": "suspicious_registration",
+      "accountId": "reg-pending-9",
+      "accountName": "TotallyRealInfluencer",
+      "reason": "Channel created 3 days ago with 50K subscribers — possible purchased account",
+      "severity": "high",
+      "flaggedAt": "2026-03-08T02:15:00Z",
+      "status": "pending"
+    }
+  ],
+  "platformHealth": {
+    "apiLatencyMs": 142,
+    "uptime": 99.97,
+    "lastDataRefresh": "2026-03-08T06:00:00Z",
+    "nextScheduledRefresh": "2026-03-09T06:00:00Z",
+    "errorRate": 0.03
+  },
+  "monthlyTrends": {
+    "deals": [
+      { "month": "2025-10", "count": 14, "revenue": 28400 },
+      { "month": "2025-11", "count": 18, "revenue": 34200 },
+      { "month": "2025-12", "count": 15, "revenue": 31800 },
+      { "month": "2026-01", "count": 21, "revenue": 42100 },
+      { "month": "2026-02", "count": 26, "revenue": 51200 },
+      { "month": "2026-03", "count": 23, "revenue": 47800 }
+    ],
+    "registrations": [
+      { "month": "2025-10", "creators": 78, "brands": 24 },
+      { "month": "2025-11", "creators": 92, "brands": 31 },
+      { "month": "2025-12", "creators": 65, "brands": 19 },
+      { "month": "2026-01", "creators": 104, "brands": 38 },
+      { "month": "2026-02", "creators": 118, "brands": 42 },
+      { "month": "2026-03", "creators": 45, "brands": 15 }
+    ]
+  }
+}

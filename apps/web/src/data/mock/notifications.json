@@ -1,0 +1,134 @@
+[
+  {
+    "id": "notif-1",
+    "type": "match_alert",
+    "title": "New Creator Match",
+    "body": "Ashley Peters (87 score) matches your Tokyo Property Launch brief. Travel niche, 284K subscribers, strong Japan content.",
+    "recipientType": "brand",
+    "recipientId": "brand-3",
+    "relatedId": "creator-1",
+    "read": false,
+    "timestamp": "2026-03-08T09:15:00Z"
+  },
+  {
+    "id": "notif-2",
+    "type": "new_deal",
+    "title": "New Deal Request",
+    "body": "NovaTech wants to work with you on their Smart Speaker Launch Campaign. Budget: $1,000-$5,000.",
+    "recipientType": "creator",
+    "recipientId": "creator-2",
+    "relatedId": "deal-1",
+    "read": false,
+    "timestamp": "2026-03-06T10:30:00Z"
+  },
+  {
+    "id": "notif-3",
+    "type": "deal_status",
+    "title": "Deal Status Update",
+    "body": "Your deal with Jordan Flex for New Protein Line Launch has moved to Negotiating. They've countered with $2,400.",
+    "recipientType": "brand",
+    "recipientId": "brand-2",
+    "relatedId": "deal-2",
+    "read": false,
+    "timestamp": "2026-03-04T11:00:00Z"
+  },
+  {
+    "id": "notif-4",
+    "type": "message",
+    "title": "New Message from Ashley Peters",
+    "body": "Re: Tokyo Property Launch — \"I'd love to do this. For the scope and the fact I'll also feature the neighborhood extensively...\"",
+    "recipientType": "brand",
+    "recipientId": "brand-3",
+    "relatedId": "deal-3",
+    "read": true,
+    "timestamp": "2026-02-22T10:00:00Z"
+  },
+  {
+    "id": "notif-5",
+    "type": "campaign_alert",
+    "title": "Campaign Outperforming Projections",
+    "body": "Zoe Nightstream's Echoes of the Void stream is at 4,800 views — 37% above projected. Peak concurrent: 890 viewers.",
+    "recipientType": "brand",
+    "recipientId": "brand-6",
+    "relatedId": "deal-4",
+    "read": false,
+    "timestamp": "2026-03-07T22:30:00Z"
+  },
+  {
+    "id": "notif-6",
+    "type": "data_refresh",
+    "title": "Channel Data Updated",
+    "body": "Your YouTube analytics have been refreshed. Average views up 22% this quarter. 3 new videos tracked.",
+    "recipientType": "creator",
+    "recipientId": "creator-1",
+    "relatedId": null,
+    "read": true,
+    "timestamp": "2026-03-07T06:00:00Z"
+  },
+  {
+    "id": "notif-7",
+    "type": "match_alert",
+    "title": "New Brand Match",
+    "body": "FuelUp Nutrition is looking for fitness creators. Budget $500-$3,000. Your match score: 91.",
+    "recipientType": "creator",
+    "recipientId": "creator-4",
+    "relatedId": "brand-2",
+    "read": true,
+    "timestamp": "2026-03-02T08:00:00Z"
+  },
+  {
+    "id": "notif-8",
+    "type": "deal_status",
+    "title": "Deal Completed",
+    "body": "Your campaign with Priya Kapoor for Cold Brew in Recipes has been marked as completed. Final views: 52,000 (16% above projection).",
+    "recipientType": "brand",
+    "recipientId": "brand-5",
+    "relatedId": "deal-5",
+    "read": true,
+    "timestamp": "2026-02-28T12:00:00Z"
+  },
+  {
+    "id": "notif-9",
+    "type": "campaign_alert",
+    "title": "Review Submitted",
+    "body": "PixelForge Games has left a 4.9-star review on your Echoes of the Void campaign. Check your deal history for details.",
+    "recipientType": "creator",
+    "recipientId": "creator-7",
+    "relatedId": "deal-6",
+    "read": false,
+    "timestamp": "2026-03-01T16:00:00Z"
+  },
+  {
+    "id": "notif-10",
+    "type": "match_alert",
+    "title": "New Creator Match",
+    "body": "Marcus Chen (92 score) is a strong match for your Smart Speaker Launch brief. 712K subscribers, top-tier tech reviewer.",
+    "recipientType": "brand",
+    "recipientId": "brand-1",
+    "relatedId": "creator-2",
+    "read": true,
+    "timestamp": "2026-03-05T14:00:00Z"
+  },
+  {
+    "id": "notif-11",
+    "type": "message",
+    "title": "New Message from PixelForge Games",
+    "body": "Re: Echoes of the Void Launch — \"Deal! We'll send you a Steam key 48 hours before launch...\"",
+    "recipientType": "creator",
+    "recipientId": "creator-3",
+    "relatedId": "deal-4",
+    "read": true,
+    "timestamp": "2026-02-16T09:00:00Z"
+  },
+  {
+    "id": "notif-12",
+    "type": "data_refresh",
+    "title": "Score Updated",
+    "body": "Your Brand Buddy score has been recalculated: 92 (+2 from last month). Improvements in engagement health and activity consistency.",
+    "recipientType": "creator",
+    "recipientId": "creator-2",
+    "relatedId": null,
+    "read": false,
+    "timestamp": "2026-03-08T06:00:00Z"
+  }
+]

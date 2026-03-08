@@ -62,6 +62,10 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // /creator/* and /brand/* — any authenticated user is allowed
+  // (already passed the auth check above)
+  // Role-specific access control will be added later.
+
   // /dashboard/* — any authenticated user is allowed
   // (already passed the auth check above)
 

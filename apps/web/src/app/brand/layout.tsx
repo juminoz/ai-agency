@@ -5,18 +5,16 @@ import { usePathname } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard-shell";
 
 const PAGE_TITLES: Record<string, string> = {
-  "/admin": "Dashboard",
-  "/admin/creators": "Creators",
-  "/admin/brands": "Brands",
-  "/admin/moderation": "Moderation",
-  "/admin/analytics": "Analytics",
-  "/admin/settings": "Settings",
-  "/admin/import": "Import",
-  "/admin/search": "Search",
-  "/admin/simulate": "Simulator",
+  "/brand": "Dashboard",
+  "/brand/search": "Find Creators",
+  "/brand/campaigns": "Campaigns",
+  "/brand/shortlists": "Shortlists",
+  "/brand/deals": "Deals",
+  "/brand/messages": "Messages",
+  "/brand/settings": "Settings",
 };
 
-export default function AdminLayout({
+export default function BrandLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -25,7 +23,7 @@ export default function AdminLayout({
   const pageTitle = PAGE_TITLES[pathname] ?? "Dashboard";
 
   return (
-    <DashboardShell role="admin" pageTitle={pageTitle}>
+    <DashboardShell role="brand" pageTitle={pageTitle}>
       {children}
     </DashboardShell>
   );

@@ -1,0 +1,204 @@
+[
+  {
+    "id": "brand-1",
+    "name": "NovaTech",
+    "logo": "/logos/brand-1.png",
+    "category": "Technology",
+    "description": "Consumer electronics and smart home devices",
+    "targetAudience": {
+      "ageRange": "18-34",
+      "gender": "all",
+      "interests": ["tech", "gaming", "smart home"],
+      "locations": ["US", "UK", "Canada"]
+    },
+    "activeBriefs": [
+      {
+        "id": "brief-1",
+        "title": "Smart Speaker Launch Campaign",
+        "description": "Looking for tech reviewers to feature our new AI-powered smart speaker. Focus on honest reviews and unboxing content.",
+        "budget": { "min": 1000, "max": 5000 },
+        "platform": "youtube",
+        "goal": "awareness",
+        "contentFormat": ["dedicated", "integration"],
+        "timeline": "March 2026"
+      },
+      {
+        "id": "brief-2",
+        "title": "Home Automation Series",
+        "description": "Seeking creators to showcase our smart home ecosystem in everyday use. Authentic lifestyle integration preferred.",
+        "budget": { "min": 2000, "max": 8000 },
+        "platform": "youtube",
+        "goal": "consideration",
+        "contentFormat": ["dedicated"],
+        "timeline": "April 2026"
+      }
+    ],
+    "completedDeals": 12,
+    "reliabilityScore": null
+  },
+  {
+    "id": "brand-2",
+    "name": "FuelUp Nutrition",
+    "logo": "/logos/brand-2.png",
+    "category": "Fitness & Nutrition",
+    "description": "Plant-based protein supplements and performance nutrition for athletes and fitness enthusiasts",
+    "targetAudience": {
+      "ageRange": "18-40",
+      "gender": "all",
+      "interests": ["fitness", "nutrition", "health", "bodybuilding"],
+      "locations": ["US", "Canada", "UK", "Australia"]
+    },
+    "activeBriefs": [
+      {
+        "id": "brief-3",
+        "title": "New Protein Line Launch",
+        "description": "Promoting our new plant-based protein powder line. Looking for fitness creators who can demonstrate the product in their routines and share honest taste reviews.",
+        "budget": { "min": 500, "max": 3000 },
+        "platform": "youtube",
+        "goal": "conversion",
+        "contentFormat": ["integration", "dedicated"],
+        "timeline": "March-April 2026"
+      }
+    ],
+    "completedDeals": 8,
+    "reliabilityScore": null
+  },
+  {
+    "id": "brand-3",
+    "name": "Wanderlux Hotels",
+    "logo": "/logos/brand-3.png",
+    "category": "Travel & Hospitality",
+    "description": "Boutique hotel chain with locations across Asia and Europe, focused on cultural immersion experiences",
+    "targetAudience": {
+      "ageRange": "25-45",
+      "gender": "all",
+      "interests": ["travel", "luxury", "culture", "food"],
+      "locations": ["US", "UK", "Australia", "Germany"]
+    },
+    "activeBriefs": [
+      {
+        "id": "brief-4",
+        "title": "Tokyo Property Launch",
+        "description": "Our new Tokyo boutique hotel opens in April. Looking for travel creators to stay and create content showcasing the property, neighborhood, and local experiences.",
+        "budget": { "min": 1500, "max": 6000 },
+        "platform": "youtube",
+        "goal": "awareness",
+        "contentFormat": ["dedicated"],
+        "timeline": "April 2026"
+      },
+      {
+        "id": "brief-5",
+        "title": "Cultural Immersion Series",
+        "description": "Ongoing partnership opportunity for travel creators to visit multiple Wanderlux properties and create a branded series around cultural immersion.",
+        "budget": { "min": 3000, "max": 12000 },
+        "platform": "youtube",
+        "goal": "awareness",
+        "contentFormat": ["dedicated", "integration"],
+        "timeline": "Q2 2026"
+      }
+    ],
+    "completedDeals": 5,
+    "reliabilityScore": null
+  },
+  {
+    "id": "brand-4",
+    "name": "ThreadEco",
+    "logo": "/logos/brand-4.png",
+    "category": "Fashion",
+    "description": "Sustainable fashion brand using recycled materials. Affordable ethical clothing for Gen Z and millennials.",
+    "targetAudience": {
+      "ageRange": "16-32",
+      "gender": "all",
+      "interests": ["fashion", "sustainability", "thrift", "streetwear"],
+      "locations": ["US", "UK", "Canada"]
+    },
+    "activeBriefs": [
+      {
+        "id": "brief-6",
+        "title": "Spring Collection Showcase",
+        "description": "Looking for fashion and lifestyle creators to style and review pieces from our Spring 2026 collection. Focus on sustainability angle.",
+        "budget": { "min": 300, "max": 1500 },
+        "platform": "youtube",
+        "goal": "awareness",
+        "contentFormat": ["integration", "dedicated"],
+        "timeline": "March-April 2026"
+      }
+    ],
+    "completedDeals": 3,
+    "reliabilityScore": null
+  },
+  {
+    "id": "brand-5",
+    "name": "BrewCraft Beverages",
+    "logo": "/logos/brand-5.png",
+    "category": "Food & Beverage",
+    "description": "Artisan craft beverages — cold brew coffee, kombucha, and functional drinks. Premium non-alcoholic alternatives.",
+    "targetAudience": {
+      "ageRange": "21-38",
+      "gender": "all",
+      "interests": ["food", "cooking", "health", "lifestyle"],
+      "locations": ["US"]
+    },
+    "activeBriefs": [
+      {
+        "id": "brief-7",
+        "title": "Cold Brew Summer Campaign",
+        "description": "Seeking food and lifestyle creators to feature our new cold brew line in recipe or morning routine content. Authentic integration preferred over hard sell.",
+        "budget": { "min": 400, "max": 2000 },
+        "platform": "youtube",
+        "goal": "consideration",
+        "contentFormat": ["integration"],
+        "timeline": "April-May 2026"
+      },
+      {
+        "id": "brief-8",
+        "title": "Kombucha Taste Test Challenge",
+        "description": "Fun taste test format — creators try our kombucha line and compare to competitors. Looking for entertaining, genuine reactions.",
+        "budget": { "min": 300, "max": 1200 },
+        "platform": "youtube",
+        "goal": "awareness",
+        "contentFormat": ["dedicated"],
+        "timeline": "March 2026"
+      }
+    ],
+    "completedDeals": 6,
+    "reliabilityScore": null
+  },
+  {
+    "id": "brand-6",
+    "name": "PixelForge Games",
+    "logo": "/logos/brand-6.png",
+    "category": "Gaming",
+    "description": "Indie game studio known for atmospheric adventure games. Upcoming title: Echoes of the Void.",
+    "targetAudience": {
+      "ageRange": "16-35",
+      "gender": "all",
+      "interests": ["gaming", "indie games", "anime", "storytelling"],
+      "locations": ["US", "UK", "Japan", "Germany", "Canada"]
+    },
+    "activeBriefs": [
+      {
+        "id": "brief-9",
+        "title": "Echoes of the Void — Early Access Launch",
+        "description": "Looking for gaming streamers and YouTubers to play the first 2 hours of our new game during launch week. Authentic first impressions content.",
+        "budget": { "min": 500, "max": 4000 },
+        "platform": "twitch",
+        "goal": "awareness",
+        "contentFormat": ["sponsored stream", "dedicated"],
+        "timeline": "March 2026"
+      },
+      {
+        "id": "brief-10",
+        "title": "Community Build-Up Campaign",
+        "description": "Pre-launch hype content — behind-the-scenes, lore deep dives, and developer interviews. Looking for creators with strong community engagement.",
+        "budget": { "min": 800, "max": 3000 },
+        "platform": "twitch",
+        "goal": "awareness",
+        "contentFormat": ["integration", "dedicated"],
+        "timeline": "March-April 2026"
+      }
+    ],
+    "completedDeals": 2,
+    "reliabilityScore": null
+  }
+]

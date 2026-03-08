@@ -1,0 +1,503 @@
+[
+  {
+    "id": "creator-1",
+    "handle": "ashley-peters",
+    "name": "Ashley Peters",
+    "avatar": "/avatars/creator-1.jpg",
+    "bio": "Travel vlogger exploring Japan and Southeast Asia",
+    "platform": "youtube",
+    "subscriberCount": 284000,
+    "videoCount": 312,
+    "categories": ["Travel", "Japan", "Lifestyle"],
+    "nicheTags": ["solo travel", "japan culture", "street food"],
+    "availabilityStatus": "open",
+    "minimumDealSize": 800,
+    "brandPreferences": {
+      "open": ["travel", "food", "tech", "fashion"],
+      "blocked": ["alcohol", "gambling"]
+    },
+    "publicProfileUrl": "brandbuddy.com/c/ashley-peters",
+    "channelUrl": "https://youtube.com/@ashleypeters",
+    "score": {
+      "overall": 87,
+      "topicRelevance": 92,
+      "recentViews": 85,
+      "engagementHealth": 88,
+      "authenticity": 84,
+      "activityConsistency": 78,
+      "commentAudienceMatch": 90
+    },
+    "nicheRanking": { "percentile": 12, "category": "Travel", "tier": "Mid (100K-500K)" },
+    "performanceTrend": {
+      "viewsTrend": "+22%",
+      "engagementTrend": "+8%",
+      "narrative": "Average views up 22% this quarter. Strongest format: destination guides. Optimal video length for your audience: 12-18 minutes."
+    },
+    "audienceInterests": [
+      { "category": "Japan Culture", "confidence": 0.94 },
+      { "category": "Travel Planning", "confidence": 0.89 },
+      { "category": "Street Food", "confidence": 0.82 },
+      { "category": "Photography", "confidence": 0.71 },
+      { "category": "Language Learning", "confidence": 0.58 },
+      { "category": "Fashion", "confidence": 0.45 }
+    ],
+    "authenticity": {
+      "score": 84,
+      "fakeFollowerRisk": "low",
+      "viewSpikeDetected": false,
+      "commentQuality": 88,
+      "likeToViewNormality": 91
+    },
+    "recentVideos": [
+      { "id": "v1", "title": "48 Hours in Kyoto — Hidden Temples & Street Food", "publishedAt": "2026-02-28", "views": 142000, "likes": 8900, "comments": 423, "engagementRate": 6.56 },
+      { "id": "v2", "title": "Japan Rail Pass Complete Guide 2026", "publishedAt": "2026-02-21", "views": 198000, "likes": 11200, "comments": 687, "engagementRate": 6.01 },
+      { "id": "v3", "title": "Best Budget Hotels in Tokyo Under $80", "publishedAt": "2026-02-14", "views": 167000, "likes": 9400, "comments": 534, "engagementRate": 5.95 },
+      { "id": "v4", "title": "Osaka Food Tour — 10 Must-Try Dishes", "publishedAt": "2026-02-07", "views": 121000, "likes": 7800, "comments": 389, "engagementRate": 6.77 },
+      { "id": "v5", "title": "Living in Rural Japan for a Week", "publishedAt": "2026-01-30", "views": 234000, "likes": 15600, "comments": 892, "engagementRate": 7.05 }
+    ],
+    "trackRecord": { "completedCampaigns": 5, "deliveryRate": 100, "avgPerformanceVsProjection": "+11%", "avgRating": 4.8 },
+    "dealHistory": [
+      { "brand": "JapanRail", "rate": 1200, "format": "Integration", "date": "2026-01", "outcome": "delivered" },
+      { "brand": "Airbnb", "rate": 2400, "format": "Dedicated", "date": "2025-11", "outcome": "delivered" },
+      { "brand": "Peak Design", "rate": 900, "format": "Integration", "date": "2025-09", "outcome": "delivered" }
+    ]
+  },
+  {
+    "id": "creator-2",
+    "handle": "marcus-chen",
+    "name": "Marcus Chen",
+    "avatar": "/avatars/creator-2.jpg",
+    "bio": "PC hardware reviewer and custom build specialist",
+    "platform": "youtube",
+    "subscriberCount": 712000,
+    "videoCount": 489,
+    "categories": ["Technology", "PC Hardware", "Reviews"],
+    "nicheTags": ["pc builds", "gpu reviews", "benchmark testing"],
+    "availabilityStatus": "open",
+    "minimumDealSize": 2500,
+    "brandPreferences": {
+      "open": ["tech", "gaming", "software", "peripherals"],
+      "blocked": ["crypto", "vpn"]
+    },
+    "publicProfileUrl": "brandbuddy.com/c/marcus-chen",
+    "channelUrl": "https://youtube.com/@marcuschen",
+    "score": {
+      "overall": 92,
+      "topicRelevance": 95,
+      "recentViews": 90,
+      "engagementHealth": 91,
+      "authenticity": 94,
+      "activityConsistency": 88,
+      "commentAudienceMatch": 93
+    },
+    "nicheRanking": { "percentile": 5, "category": "Technology", "tier": "Mid (100K-500K)" },
+    "performanceTrend": {
+      "viewsTrend": "+15%",
+      "engagementTrend": "+5%",
+      "narrative": "Consistent growth driven by GPU review season. Top performing format: comparison videos. Sweet spot length: 15-22 minutes."
+    },
+    "audienceInterests": [
+      { "category": "PC Hardware", "confidence": 0.97 },
+      { "category": "Gaming", "confidence": 0.91 },
+      { "category": "Software", "confidence": 0.78 },
+      { "category": "Productivity", "confidence": 0.62 },
+      { "category": "Programming", "confidence": 0.55 },
+      { "category": "Home Office", "confidence": 0.41 }
+    ],
+    "authenticity": {
+      "score": 94,
+      "fakeFollowerRisk": "very low",
+      "viewSpikeDetected": false,
+      "commentQuality": 93,
+      "likeToViewNormality": 95
+    },
+    "recentVideos": [
+      { "id": "v6", "title": "RTX 5080 vs RX 9070 XT — The Real Winner", "publishedAt": "2026-03-01", "views": 487000, "likes": 24300, "comments": 1890, "engagementRate": 5.37 },
+      { "id": "v7", "title": "Best $1000 Gaming PC Build — March 2026", "publishedAt": "2026-02-22", "views": 312000, "likes": 18700, "comments": 1245, "engagementRate": 6.39 },
+      { "id": "v8", "title": "DDR6 Is Here — Is It Worth Upgrading?", "publishedAt": "2026-02-15", "views": 534000, "likes": 29100, "comments": 2103, "engagementRate": 5.84 },
+      { "id": "v9", "title": "I Used a $200 Monitor for 30 Days", "publishedAt": "2026-02-08", "views": 278000, "likes": 15400, "comments": 978, "engagementRate": 5.89 },
+      { "id": "v10", "title": "The Best SSD Nobody Talks About", "publishedAt": "2026-02-01", "views": 198000, "likes": 12300, "comments": 756, "engagementRate": 6.59 }
+    ],
+    "trackRecord": { "completedCampaigns": 14, "deliveryRate": 100, "avgPerformanceVsProjection": "+18%", "avgRating": 4.9 },
+    "dealHistory": [
+      { "brand": "NovaTech", "rate": 4500, "format": "Dedicated", "date": "2026-02", "outcome": "delivered" },
+      { "brand": "Corsair", "rate": 3200, "format": "Integration", "date": "2026-01", "outcome": "delivered" },
+      { "brand": "Samsung", "rate": 5000, "format": "Dedicated", "date": "2025-12", "outcome": "delivered" },
+      { "brand": "ASUS", "rate": 3800, "format": "Integration", "date": "2025-10", "outcome": "delivered" }
+    ]
+  },
+  {
+    "id": "creator-3",
+    "handle": "zoe-nightstream",
+    "name": "Zoe Nightstream",
+    "avatar": "/avatars/creator-3.jpg",
+    "bio": "Variety streamer & cozy game enthusiast. Building a wholesome community one stream at a time.",
+    "platform": "twitch",
+    "subscriberCount": 48000,
+    "videoCount": 1240,
+    "categories": ["Gaming", "Cozy Games", "Community"],
+    "nicheTags": ["cozy games", "indie games", "community streams"],
+    "availabilityStatus": "open",
+    "minimumDealSize": 400,
+    "brandPreferences": {
+      "open": ["gaming", "food", "lifestyle", "art supplies"],
+      "blocked": ["gambling", "alcohol", "crypto"]
+    },
+    "publicProfileUrl": "brandbuddy.com/c/zoe-nightstream",
+    "channelUrl": "https://twitch.tv/zoenightstream",
+    "score": {
+      "overall": 76,
+      "topicRelevance": 80,
+      "recentViews": 68,
+      "engagementHealth": 85,
+      "authenticity": 90,
+      "activityConsistency": 72,
+      "commentAudienceMatch": 82
+    },
+    "nicheRanking": { "percentile": 28, "category": "Gaming", "tier": "Micro (10K-100K)" },
+    "performanceTrend": {
+      "viewsTrend": "+34%",
+      "engagementTrend": "+12%",
+      "narrative": "Strong growth in concurrent viewers this quarter. Community engagement metrics are excellent. Raid frequency increasing from larger streamers."
+    },
+    "audienceInterests": [
+      { "category": "Indie Games", "confidence": 0.92 },
+      { "category": "Cozy/Casual Games", "confidence": 0.89 },
+      { "category": "Art & Crafts", "confidence": 0.67 },
+      { "category": "Anime", "confidence": 0.61 },
+      { "category": "Cooking", "confidence": 0.48 },
+      { "category": "Music", "confidence": 0.39 }
+    ],
+    "authenticity": {
+      "score": 90,
+      "fakeFollowerRisk": "very low",
+      "viewSpikeDetected": false,
+      "commentQuality": 92,
+      "likeToViewNormality": 88
+    },
+    "recentVideos": [
+      { "id": "v11", "title": "Cozy Sunday — Playing Spiritwell for the First Time!", "publishedAt": "2026-03-02", "views": 4200, "likes": 380, "comments": 210, "engagementRate": 14.05 },
+      { "id": "v12", "title": "Stardew Valley 1.7 Launch Stream!", "publishedAt": "2026-02-25", "views": 8700, "likes": 720, "comments": 456, "engagementRate": 13.52 },
+      { "id": "v13", "title": "Art & Chat Night — Drawing Your Characters", "publishedAt": "2026-02-20", "views": 3100, "likes": 290, "comments": 187, "engagementRate": 15.39 },
+      { "id": "v14", "title": "Hollow Knight Silksong Blind Playthrough Part 3", "publishedAt": "2026-02-15", "views": 5400, "likes": 410, "comments": 298, "engagementRate": 13.11 },
+      { "id": "v15", "title": "Unboxing Stream — Viewer Mail + New Setup Tour", "publishedAt": "2026-02-10", "views": 3800, "likes": 340, "comments": 223, "engagementRate": 14.82 }
+    ],
+    "trackRecord": { "completedCampaigns": 2, "deliveryRate": 100, "avgPerformanceVsProjection": "+5%", "avgRating": 4.6 },
+    "dealHistory": [
+      { "brand": "IndieDev Studio", "rate": 500, "format": "Sponsored Stream", "date": "2026-01", "outcome": "delivered" },
+      { "brand": "GamerSnacks", "rate": 450, "format": "Integration", "date": "2025-11", "outcome": "delivered" }
+    ]
+  },
+  {
+    "id": "creator-4",
+    "handle": "jordan-flex",
+    "name": "Jordan Flex",
+    "avatar": "/avatars/creator-4.jpg",
+    "bio": "Certified personal trainer sharing science-backed workout routines and nutrition tips",
+    "platform": "youtube",
+    "subscriberCount": 156000,
+    "videoCount": 278,
+    "categories": ["Fitness", "Nutrition", "Health"],
+    "nicheTags": ["home workouts", "meal prep", "natural bodybuilding"],
+    "availabilityStatus": "open",
+    "minimumDealSize": 600,
+    "brandPreferences": {
+      "open": ["fitness", "nutrition", "supplements", "activewear", "health tech"],
+      "blocked": ["steroids", "gambling", "fast food"]
+    },
+    "publicProfileUrl": "brandbuddy.com/c/jordan-flex",
+    "channelUrl": "https://youtube.com/@jordanflex",
+    "score": {
+      "overall": 79,
+      "topicRelevance": 88,
+      "recentViews": 72,
+      "engagementHealth": 82,
+      "authenticity": 80,
+      "activityConsistency": 74,
+      "commentAudienceMatch": 78
+    },
+    "nicheRanking": { "percentile": 18, "category": "Fitness", "tier": "Mid (100K-500K)" },
+    "performanceTrend": {
+      "viewsTrend": "+9%",
+      "engagementTrend": "+3%",
+      "narrative": "Steady growth driven by New Year fitness surge. Meal prep content outperforms workout content by 40%. Shorts driving subscriber growth."
+    },
+    "audienceInterests": [
+      { "category": "Fitness & Exercise", "confidence": 0.95 },
+      { "category": "Nutrition", "confidence": 0.88 },
+      { "category": "Supplements", "confidence": 0.76 },
+      { "category": "Mental Health", "confidence": 0.59 },
+      { "category": "Outdoor Activities", "confidence": 0.47 },
+      { "category": "Fashion", "confidence": 0.34 }
+    ],
+    "authenticity": {
+      "score": 80,
+      "fakeFollowerRisk": "low",
+      "viewSpikeDetected": false,
+      "commentQuality": 79,
+      "likeToViewNormality": 82
+    },
+    "recentVideos": [
+      { "id": "v16", "title": "Full Week of Eating — 2200 Cal Cutting Diet", "publishedAt": "2026-03-01", "views": 89000, "likes": 5600, "comments": 412, "engagementRate": 6.76 },
+      { "id": "v17", "title": "30-Minute Full Body Workout — No Equipment", "publishedAt": "2026-02-22", "views": 124000, "likes": 7800, "comments": 534, "engagementRate": 6.72 },
+      { "id": "v18", "title": "Creatine — Everything You Need to Know in 2026", "publishedAt": "2026-02-15", "views": 156000, "likes": 9200, "comments": 678, "engagementRate": 6.33 },
+      { "id": "v19", "title": "I Tried the Viral 75 Hard Challenge — Honest Review", "publishedAt": "2026-02-08", "views": 203000, "likes": 11400, "comments": 1023, "engagementRate": 6.12 },
+      { "id": "v20", "title": "5 Exercises You're Doing Wrong (Fix These Now)", "publishedAt": "2026-02-01", "views": 178000, "likes": 10100, "comments": 745, "engagementRate": 6.09 }
+    ],
+    "trackRecord": { "completedCampaigns": 7, "deliveryRate": 100, "avgPerformanceVsProjection": "+6%", "avgRating": 4.5 },
+    "dealHistory": [
+      { "brand": "FuelUp Nutrition", "rate": 1800, "format": "Dedicated", "date": "2026-01", "outcome": "delivered" },
+      { "brand": "Nike", "rate": 2200, "format": "Integration", "date": "2025-12", "outcome": "delivered" },
+      { "brand": "MyProtein", "rate": 1400, "format": "Dedicated", "date": "2025-10", "outcome": "delivered" }
+    ]
+  },
+  {
+    "id": "creator-5",
+    "handle": "chef-priya",
+    "name": "Priya Kapoor",
+    "avatar": "/avatars/creator-5.jpg",
+    "bio": "Home chef sharing authentic Indian recipes with a modern twist. Making complex dishes approachable.",
+    "platform": "youtube",
+    "subscriberCount": 93000,
+    "videoCount": 195,
+    "categories": ["Cooking", "Indian Food", "Recipes"],
+    "nicheTags": ["indian cooking", "easy recipes", "vegetarian meals"],
+    "availabilityStatus": "limited",
+    "minimumDealSize": 500,
+    "brandPreferences": {
+      "open": ["food", "kitchen appliances", "grocery", "cookware"],
+      "blocked": ["alcohol", "meat brands"]
+    },
+    "publicProfileUrl": "brandbuddy.com/c/chef-priya",
+    "channelUrl": "https://youtube.com/@chefpriya",
+    "score": {
+      "overall": 74,
+      "topicRelevance": 86,
+      "recentViews": 67,
+      "engagementHealth": 79,
+      "authenticity": 82,
+      "activityConsistency": 65,
+      "commentAudienceMatch": 76
+    },
+    "nicheRanking": { "percentile": 22, "category": "Cooking", "tier": "Micro (10K-100K)" },
+    "performanceTrend": {
+      "viewsTrend": "+11%",
+      "engagementTrend": "+14%",
+      "narrative": "Engagement rate climbing faster than views — strong community loyalty. Recipe Shorts performing well on discovery. Upload consistency could improve."
+    },
+    "audienceInterests": [
+      { "category": "Indian Cuisine", "confidence": 0.96 },
+      { "category": "Vegetarian Cooking", "confidence": 0.87 },
+      { "category": "Kitchen Gadgets", "confidence": 0.72 },
+      { "category": "Health & Wellness", "confidence": 0.58 },
+      { "category": "Family Life", "confidence": 0.51 },
+      { "category": "Culture & Tradition", "confidence": 0.44 }
+    ],
+    "authenticity": {
+      "score": 82,
+      "fakeFollowerRisk": "low",
+      "viewSpikeDetected": false,
+      "commentQuality": 85,
+      "likeToViewNormality": 80
+    },
+    "recentVideos": [
+      { "id": "v21", "title": "Restaurant-Style Butter Chicken at Home", "publishedAt": "2026-02-27", "views": 67000, "likes": 4800, "comments": 312, "engagementRate": 7.63 },
+      { "id": "v22", "title": "10 Spices Every Kitchen Needs (Indian Cooking 101)", "publishedAt": "2026-02-18", "views": 54000, "likes": 3900, "comments": 278, "engagementRate": 7.74 },
+      { "id": "v23", "title": "One-Pot Dal — Ready in 20 Minutes", "publishedAt": "2026-02-09", "views": 43000, "likes": 3200, "comments": 234, "engagementRate": 7.98 },
+      { "id": "v24", "title": "My Mom's Secret Biryani Recipe (Finally Sharing!)", "publishedAt": "2026-01-30", "views": 112000, "likes": 8900, "comments": 567, "engagementRate": 8.46 },
+      { "id": "v25", "title": "Meal Prep Indian Lunches for the Week", "publishedAt": "2026-01-22", "views": 78000, "likes": 5400, "comments": 389, "engagementRate": 7.42 }
+    ],
+    "trackRecord": { "completedCampaigns": 3, "deliveryRate": 100, "avgPerformanceVsProjection": "+8%", "avgRating": 4.7 },
+    "dealHistory": [
+      { "brand": "Instant Pot", "rate": 800, "format": "Integration", "date": "2026-02", "outcome": "delivered" },
+      { "brand": "Whole Foods", "rate": 1200, "format": "Dedicated", "date": "2025-11", "outcome": "delivered" }
+    ]
+  },
+  {
+    "id": "creator-6",
+    "handle": "lux-lena",
+    "name": "Lena Vasquez",
+    "avatar": "/avatars/creator-6.jpg",
+    "bio": "Sustainable fashion advocate. Thrift hauls, capsule wardrobes, and ethical brand reviews.",
+    "platform": "youtube",
+    "subscriberCount": 8200,
+    "videoCount": 87,
+    "categories": ["Fashion", "Sustainability", "Lifestyle"],
+    "nicheTags": ["sustainable fashion", "thrift hauls", "capsule wardrobe"],
+    "availabilityStatus": "open",
+    "minimumDealSize": 200,
+    "brandPreferences": {
+      "open": ["fashion", "beauty", "lifestyle", "eco-friendly"],
+      "blocked": ["fast fashion", "fur brands"]
+    },
+    "publicProfileUrl": "brandbuddy.com/c/lux-lena",
+    "channelUrl": "https://youtube.com/@luxlena",
+    "score": {
+      "overall": 62,
+      "topicRelevance": 78,
+      "recentViews": 52,
+      "engagementHealth": 71,
+      "authenticity": 76,
+      "activityConsistency": 55,
+      "commentAudienceMatch": 64
+    },
+    "nicheRanking": { "percentile": 45, "category": "Fashion", "tier": "Nano (1K-10K)" },
+    "performanceTrend": {
+      "viewsTrend": "+48%",
+      "engagementTrend": "+22%",
+      "narrative": "Rapid percentage growth from small base. Thrift haul content is the primary growth driver. Needs more consistent upload schedule to sustain momentum."
+    },
+    "audienceInterests": [
+      { "category": "Sustainable Fashion", "confidence": 0.93 },
+      { "category": "Thrift Shopping", "confidence": 0.88 },
+      { "category": "Ethical Brands", "confidence": 0.75 },
+      { "category": "Minimalism", "confidence": 0.63 },
+      { "category": "Environmental Issues", "confidence": 0.52 },
+      { "category": "Beauty", "confidence": 0.41 }
+    ],
+    "authenticity": {
+      "score": 76,
+      "fakeFollowerRisk": "very low",
+      "viewSpikeDetected": false,
+      "commentQuality": 80,
+      "likeToViewNormality": 73
+    },
+    "recentVideos": [
+      { "id": "v26", "title": "I Built a 30-Piece Capsule Wardrobe for $150", "publishedAt": "2026-02-26", "views": 4300, "likes": 390, "comments": 67, "engagementRate": 10.63 },
+      { "id": "v27", "title": "$50 Thrift Haul — Found Designer Pieces!", "publishedAt": "2026-02-17", "views": 6100, "likes": 520, "comments": 89, "engagementRate": 9.98 },
+      { "id": "v28", "title": "Is Shein Really That Bad? (Deep Dive)", "publishedAt": "2026-02-08", "views": 12400, "likes": 890, "comments": 234, "engagementRate": 9.07 },
+      { "id": "v29", "title": "5 Ethical Brands Actually Worth the Price", "publishedAt": "2026-01-28", "views": 3200, "likes": 280, "comments": 54, "engagementRate": 10.44 },
+      { "id": "v30", "title": "What I Wore This Week — Sustainable Outfits Only", "publishedAt": "2026-01-18", "views": 2100, "likes": 190, "comments": 38, "engagementRate": 10.86 }
+    ],
+    "trackRecord": { "completedCampaigns": 1, "deliveryRate": 100, "avgPerformanceVsProjection": "-3%", "avgRating": 4.3 },
+    "dealHistory": [
+      { "brand": "ThreadUp", "rate": 250, "format": "Integration", "date": "2025-12", "outcome": "delivered" }
+    ]
+  },
+  {
+    "id": "creator-7",
+    "handle": "animesensei-kai",
+    "name": "Kai Tanaka",
+    "avatar": "/avatars/creator-7.jpg",
+    "bio": "Anime reviewer & manga collector. Weekly episode breakdowns and tier lists.",
+    "platform": "twitch",
+    "subscriberCount": 127000,
+    "videoCount": 890,
+    "categories": ["Anime", "Manga", "Entertainment"],
+    "nicheTags": ["anime reviews", "manga collection", "watch parties"],
+    "availabilityStatus": "open",
+    "minimumDealSize": 700,
+    "brandPreferences": {
+      "open": ["anime", "manga", "gaming", "merch", "streaming services"],
+      "blocked": ["gambling", "adult content"]
+    },
+    "publicProfileUrl": "brandbuddy.com/c/animesensei-kai",
+    "channelUrl": "https://twitch.tv/animesenseikai",
+    "score": {
+      "overall": 81,
+      "topicRelevance": 90,
+      "recentViews": 76,
+      "engagementHealth": 86,
+      "authenticity": 83,
+      "activityConsistency": 80,
+      "commentAudienceMatch": 85
+    },
+    "nicheRanking": { "percentile": 14, "category": "Anime", "tier": "Mid (100K-500K)" },
+    "performanceTrend": {
+      "viewsTrend": "+18%",
+      "engagementTrend": "+10%",
+      "narrative": "Watch party streams drive highest concurrent viewership. Episode reaction content performs consistently well during anime season. Strong chat engagement metrics."
+    },
+    "audienceInterests": [
+      { "category": "Anime", "confidence": 0.97 },
+      { "category": "Manga", "confidence": 0.91 },
+      { "category": "Japanese Culture", "confidence": 0.74 },
+      { "category": "Gaming", "confidence": 0.68 },
+      { "category": "Collectibles", "confidence": 0.55 },
+      { "category": "Cosplay", "confidence": 0.42 }
+    ],
+    "authenticity": {
+      "score": 83,
+      "fakeFollowerRisk": "low",
+      "viewSpikeDetected": false,
+      "commentQuality": 86,
+      "likeToViewNormality": 81
+    },
+    "recentVideos": [
+      { "id": "v31", "title": "One Piece 1142 Live Reaction — [SPOILERS]", "publishedAt": "2026-03-02", "views": 18200, "likes": 1400, "comments": 890, "engagementRate": 12.58 },
+      { "id": "v32", "title": "Winter 2026 Anime Tier List — Best & Worst", "publishedAt": "2026-02-24", "views": 34000, "likes": 2600, "comments": 1230, "engagementRate": 11.26 },
+      { "id": "v33", "title": "Manga Haul — 40 New Volumes!", "publishedAt": "2026-02-18", "views": 12500, "likes": 980, "comments": 456, "engagementRate": 11.49 },
+      { "id": "v34", "title": "Jujutsu Kaisen Final Arc — Complete Breakdown", "publishedAt": "2026-02-11", "views": 45000, "likes": 3400, "comments": 1678, "engagementRate": 11.28 },
+      { "id": "v35", "title": "Anime Expo 2026 — Everything We Know So Far", "publishedAt": "2026-02-04", "views": 21000, "likes": 1600, "comments": 723, "engagementRate": 11.06 }
+    ],
+    "trackRecord": { "completedCampaigns": 6, "deliveryRate": 100, "avgPerformanceVsProjection": "+14%", "avgRating": 4.7 },
+    "dealHistory": [
+      { "brand": "Crunchyroll", "rate": 2000, "format": "Sponsored Stream", "date": "2026-02", "outcome": "delivered" },
+      { "brand": "Bookwalker", "rate": 900, "format": "Integration", "date": "2025-12", "outcome": "delivered" },
+      { "brand": "AmiAmi", "rate": 750, "format": "Integration", "date": "2025-10", "outcome": "delivered" }
+    ]
+  },
+  {
+    "id": "creator-8",
+    "handle": "professor-maya",
+    "name": "Maya Rodriguez",
+    "avatar": "/avatars/creator-8.jpg",
+    "bio": "Making science accessible. Physics PhD breaking down complex topics for curious minds.",
+    "platform": "youtube",
+    "subscriberCount": 1420000,
+    "videoCount": 156,
+    "categories": ["Education", "Science", "Physics"],
+    "nicheTags": ["science explainer", "physics", "critical thinking"],
+    "availabilityStatus": "limited",
+    "minimumDealSize": 5000,
+    "brandPreferences": {
+      "open": ["education", "tech", "books", "science equipment"],
+      "blocked": ["pseudoscience", "gambling", "alcohol"]
+    },
+    "publicProfileUrl": "brandbuddy.com/c/professor-maya",
+    "channelUrl": "https://youtube.com/@professormaya",
+    "score": {
+      "overall": 90,
+      "topicRelevance": 94,
+      "recentViews": 88,
+      "engagementHealth": 86,
+      "authenticity": 96,
+      "activityConsistency": 70,
+      "commentAudienceMatch": 92
+    },
+    "nicheRanking": { "percentile": 3, "category": "Education", "tier": "Macro (1M-5M)" },
+    "performanceTrend": {
+      "viewsTrend": "+7%",
+      "engagementTrend": "+2%",
+      "narrative": "Stable performance at scale. Individual videos are high-effort and consistently go semi-viral. Lower upload frequency but very high per-video performance."
+    },
+    "audienceInterests": [
+      { "category": "Science & Physics", "confidence": 0.96 },
+      { "category": "Education", "confidence": 0.92 },
+      { "category": "Technology", "confidence": 0.78 },
+      { "category": "Space & Astronomy", "confidence": 0.71 },
+      { "category": "Mathematics", "confidence": 0.64 },
+      { "category": "Books & Reading", "confidence": 0.52 }
+    ],
+    "authenticity": {
+      "score": 96,
+      "fakeFollowerRisk": "very low",
+      "viewSpikeDetected": false,
+      "commentQuality": 95,
+      "likeToViewNormality": 97
+    },
+    "recentVideos": [
+      { "id": "v36", "title": "Why Quantum Computing Won't Replace Your Laptop", "publishedAt": "2026-02-20", "views": 1890000, "likes": 98000, "comments": 8900, "engagementRate": 5.66 },
+      { "id": "v37", "title": "The Problem with Pop Science (And How to Fix It)", "publishedAt": "2026-01-28", "views": 2340000, "likes": 124000, "comments": 12400, "engagementRate": 5.83 },
+      { "id": "v38", "title": "Black Holes Don't Actually Suck — Here's Why", "publishedAt": "2026-01-05", "views": 3120000, "likes": 167000, "comments": 14200, "engagementRate": 5.81 },
+      { "id": "v39", "title": "I Tried Every Physics Textbook So You Don't Have To", "publishedAt": "2025-12-12", "views": 1560000, "likes": 89000, "comments": 6700, "engagementRate": 6.14 },
+      { "id": "v40", "title": "What Actually Happens at the Speed of Light?", "publishedAt": "2025-11-18", "views": 4230000, "likes": 213000, "comments": 18900, "engagementRate": 5.49 }
+    ],
+    "trackRecord": { "completedCampaigns": 4, "deliveryRate": 100, "avgPerformanceVsProjection": "+32%", "avgRating": 5.0 },
+    "dealHistory": [
+      { "brand": "Brilliant", "rate": 8000, "format": "Integration", "date": "2026-01", "outcome": "delivered" },
+      { "brand": "NovaTech", "rate": 6500, "format": "Dedicated", "date": "2025-10", "outcome": "delivered" },
+      { "brand": "Audible", "rate": 7000, "format": "Integration", "date": "2025-08", "outcome": "delivered" }
+    ]
+  }
+]
