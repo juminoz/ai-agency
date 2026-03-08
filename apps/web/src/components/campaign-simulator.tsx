@@ -19,13 +19,14 @@ interface SimulationResult {
 }
 
 function formatNumber(n: number): string {
+  if (typeof n !== "number" || !isFinite(n)) return "N/A";
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
   return n.toLocaleString();
 }
 
 function formatCurrency(n: number): string {
-  if (!isFinite(n)) return "N/A";
+  if (typeof n !== "number" || !isFinite(n)) return "N/A";
   return `$${n.toFixed(2)}`;
 }
 

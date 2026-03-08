@@ -45,7 +45,7 @@ export interface ChannelProjection {
  * - Cost per conversion = budget / estimated conversions
  */
 export async function simulateCampaign(
-  input: SimulationInput,
+  input: SimulationInput
 ): Promise<SimulationResult> {
   const {
     channelIds,
@@ -59,13 +59,35 @@ export async function simulateCampaign(
 
   const perChannel: ChannelProjection[] = [];
 
-  for (const channelId of channelIds) {
-    // Fetch channel title
-    const { data: channel } = await supabase
-      .from("channels")
-      .select("title")
-      .eq("channel_id", channelId)
-      .single();
+  for (const rawId of channelIds) {
+    // Resolve handle / custom_url → channel_id
+    let channelId = rawId.trim();
+    let channel: { title: string; channel_id: string } | null = null;
+
+    if (channelId.startsWith("@") || !channelId.startsWith("UC")) {
+      // Try lookup by custom_url (with or without @)
+      const handle = channelId.startsWith("@") ? channelId : `@${channelId}`;
+      const { data: found } = await supabase
+        .from("channels")
+        .select("channel_id, title")
+        .eq("custom_url", handle)
+        .single();
+
+      if (found) {
+        channel = found as { title: string; channel_id: string };
+        channelId = channel.channel_id;
+      }
+    }
+
+    // If not resolved by handle, try direct channel_id lookup
+    if (!channel) {
+      const { data: found } = await supabase
+        .from("channels")
+        .select("channel_id, title")
+        .eq("channel_id", channelId)
+        .single();
+      channel = found as { title: string; channel_id: string } | null;
+    }
 
     // Fetch recent videos for this channel
     const { data: videos } = await supabase
@@ -91,7 +113,7 @@ export async function simulateCampaign(
 
     perChannel.push({
       channelId,
-      channelTitle: (channel as { title: string } | null)?.title ?? channelId,
+      channelTitle: channel?.title ?? channelId,
       medianViews,
       medianEngagementRate,
       projectedReach: medianViews,
@@ -102,7 +124,7 @@ export async function simulateCampaign(
   const totalReach = perChannel.reduce((sum, c) => sum + c.projectedReach, 0);
   const expectedEngagements = perChannel.reduce(
     (sum, c) => sum + c.projectedEngagements,
-    0,
+    0
   );
 
   const conversionsLow = Math.round(expectedEngagements * conversionRateLow);
